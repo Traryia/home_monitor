@@ -18,38 +18,41 @@ body.day{background:linear-gradient(180deg,#2e6ab8 0%,#4f8fd4 55%,#7db4e6 100%)}
 .star{position:absolute;background:#fff;border-radius:50%;animation:tw 3s ease-in-out infinite}
 @keyframes tw{0%,100%{opacity:.15}50%{opacity:.85}}
 .cloud{position:fixed;border-radius:50%;background:rgba(255,255,255,.07);filter:blur(28px);pointer-events:none;z-index:0}
-#app{position:relative;z-index:1;display:grid;grid-template-columns:336px 1fr;gap:12px;height:100vh;padding:14px}
-/* ---------- left column ---------- */
+/* ---------- pager ---------- */
+#pager{display:flex;width:300vw;height:100vh;position:relative;z-index:1;
+  transition:transform .45s ease}
+.page{width:100vw;height:100vh;padding:14px;flex:none;overflow:hidden}
+#dots{position:fixed;bottom:8px;left:50%;transform:translateX(-50%);z-index:5;
+  display:flex;gap:9px}
+#dots span{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.28);
+  transition:background .3s}
+#dots span.on{background:#fff}
+/* ---------- cards ---------- */
+.card{background:rgba(13,24,48,.55);border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:10px 13px}
+body.day .card{background:rgba(8,30,66,.32)}
+.ctitle{font-size:12px;color:rgba(235,240,255,.55);font-weight:600;margin-bottom:8px;display:flex;align-items:center;gap:5px}
+.ctitle svg{flex:none}
+/* ---------- page 1 ---------- */
+#app{display:grid;grid-template-columns:336px 1fr;gap:12px;height:100%}
 #left{display:flex;flex-direction:column;gap:6px;min-height:0}
 #topbar{display:flex;align-items:baseline;gap:10px}
 #clock{font-size:30px;font-weight:600;line-height:1;letter-spacing:0}
 #date{font-size:13px;color:rgba(235,240,255,.65)}
-#hero{text-align:center;margin:4px 0 2px}
+#hero{text-align:center;margin:8px 0 4px}
 #loc{display:flex;align-items:center;justify-content:center;gap:6px;font-size:23px;font-weight:600}
 #loc svg{flex:none}
-#curtemp{font-size:88px;font-weight:200;line-height:1.05;margin-left:-4px}
+#curtemp{font-size:96px;font-weight:200;line-height:1.05;margin-left:-4px}
 #cond{font-size:17px;font-weight:500}
 #hl{font-size:14px;color:rgba(235,240,255,.85);margin-top:3px}
-#summary{font-size:13px;color:rgba(235,240,255,.78);line-height:1.5;margin-top:4px}
+#summary{font-size:13px;color:rgba(235,240,255,.78);line-height:1.5;margin-top:6px}
 #meta{font-size:12.5px;color:rgba(235,240,255,.62);margin-top:4px;line-height:1.6;text-align:center}
-.card{background:rgba(13,24,48,.55);border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:10px 13px}
-body.day .card{background:rgba(8,30,66,.32)}
 .alert{display:flex;gap:10px;align-items:flex-start}
 .alert .t{font-size:15px;font-weight:700}
 .alert .d{font-size:12.5px;color:rgba(235,240,255,.72);margin-top:2px;line-height:1.45}
-#aqi .row{display:flex;align-items:baseline;gap:8px}
-#aqiVal{font-size:26px;font-weight:700}
-#aqiLvl{font-size:15px;font-weight:600}
-#aqiBar{position:relative;height:5px;border-radius:3px;margin:10px 0 8px;
-  background:linear-gradient(90deg,#4cd964 0%,#a3e048 17%,#ffcc00 33%,#ff9f43 50%,#ff5e3a 67%,#b04ad8 84%,#8b1e3f 100%)}
-#aqiDot{position:absolute;top:50%;width:9px;height:9px;border-radius:50%;background:#fff;
-  border:2px solid rgba(0,0,0,.35);transform:translate(-50%,-50%)}
-#aqiTxt{font-size:12px;color:rgba(235,240,255,.62)}
+#alerts{display:flex;flex-direction:column;gap:6px;margin-top:6px}
 #status{margin-top:auto;font-size:11.5px;color:rgba(235,240,255,.45);display:flex;align-items:center;gap:6px}
 #dot{width:7px;height:7px;border-radius:50%;background:#4cd964;flex:none}
-/* ---------- right column ---------- */
 #right{display:flex;flex-direction:column;gap:12px;min-width:0;min-height:0}
-.ctitle{font-size:12px;color:rgba(235,240,255,.55);font-weight:600;margin-bottom:8px;display:flex;align-items:center;gap:5px}
 #hourly{display:flex;justify-content:space-between}
 .hitem{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:4px}
 .hitem .ht{font-size:12.5px;color:rgba(235,240,255,.75);font-weight:600}
@@ -69,6 +72,38 @@ body.day .card{background:rgba(8,30,66,.32)}
 .dnow{position:absolute;top:50%;width:8px;height:8px;border-radius:50%;background:#fff;
   border:1.5px solid rgba(0,0,0,.3);transform:translate(-50%,-50%)}
 #foot{margin-left:auto;font-weight:400;font-size:10px;color:rgba(235,240,255,.35)}
+/* ---------- page 2: detail grid ---------- */
+#grid2{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:1fr 1fr;gap:12px;height:100%}
+.dcard{display:flex;flex-direction:column;min-height:0}
+.dcard .big{font-size:44px;font-weight:300;line-height:1.1}
+.dcard .big small{font-size:20px;font-weight:400;color:rgba(235,240,255,.75)}
+.dcard .sub{font-size:13px;font-weight:600;margin-top:1px}
+.dcard .desc{font-size:12px;color:rgba(235,240,255,.62);margin-top:auto;line-height:1.45}
+.wrows{display:flex;flex-direction:column;font-size:13.5px}
+.wrows .wr{display:flex;justify-content:space-between;border-top:1px solid rgba(255,255,255,.08);padding:4.5px 0}
+.wrows .wr:first-child{border-top:none}
+.wrows .wr b{font-weight:600}
+.wrows .wr span{color:rgba(235,240,255,.62)}
+.gbar{position:relative;height:5px;border-radius:3px;margin:9px 0 7px}
+.gdot{position:absolute;top:50%;width:9px;height:9px;border-radius:50%;background:#fff;
+  border:2px solid rgba(0,0,0,.35);transform:translate(-50%,-50%)}
+/* ---------- page 3 ---------- */
+#grid3{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1.05fr 1fr;gap:12px;height:100%}
+#moonCard{grid-column:1/3;display:flex;align-items:center;gap:18px}
+#moonCard .mrows{flex:1;display:flex;flex-direction:column;font-size:14px}
+#moonCard .mrows .wr{display:flex;justify-content:space-between;border-top:1px solid rgba(255,255,255,.08);padding:6px 0}
+#moonCard .mrows .wr:first-child{border-top:none}
+#moonCard .mrows .wr b{font-weight:600}
+#moonCard .mrows .wr span{color:rgba(235,240,255,.62)}
+#moonName{font-size:20px;font-weight:700;margin-bottom:4px}
+#aqi .row{display:flex;align-items:baseline;gap:8px}
+#aqiVal{font-size:40px;font-weight:300}
+#aqiLvl{font-size:16px;font-weight:600}
+#aqiBar{position:relative;height:5px;border-radius:3px;margin:10px 0 8px;
+  background:linear-gradient(90deg,#4cd964 0%,#a3e048 17%,#ffcc00 33%,#ff9f43 50%,#ff5e3a 67%,#b04ad8 84%,#8b1e3f 100%)}
+#aqiDot{position:absolute;top:50%;width:9px;height:9px;border-radius:50%;background:#fff;
+  border:2px solid rgba(0,0,0,.35);transform:translate(-50%,-50%)}
+#aqiTxt{font-size:12px;color:rgba(235,240,255,.62);margin-top:auto}
 </style>
 </head>
 <body>
@@ -76,39 +111,131 @@ body.day .card{background:rgba(8,30,66,.32)}
 <div class="cloud" style="width:420px;height:150px;top:-40px;left:12%"></div>
 <div class="cloud" style="width:520px;height:170px;top:22%;right:-160px"></div>
 <div class="cloud" style="width:380px;height:130px;bottom:-50px;left:38%"></div>
-<div id="app">
-  <div id="left">
-    <div id="topbar">
-      <div id="clock">--:--</div>
-      <div id="date">----年--月--日</div>
+
+<div id="pager">
+  <!-- ============ P1 概览 ============ -->
+  <section class="page">
+    <div id="app">
+      <div id="left">
+        <div id="topbar">
+          <div id="clock">--:--</div>
+          <div id="date">----年--月--日</div>
+        </div>
+        <div id="hero">
+          <div id="loc"></div>
+          <div id="curtemp">--°</div>
+          <div id="cond">获取中…</div>
+          <div id="hl"></div>
+        </div>
+        <div id="summary"></div>
+        <div id="meta"></div>
+        <div id="alerts"></div>
+        <div id="status"><span id="dot"></span><span id="statusTxt">等待数据…</span></div>
+      </div>
+      <div id="right">
+        <div class="card">
+          <div class="ctitle">逐时预报</div>
+          <div id="hourly"></div>
+        </div>
+        <div class="card" id="daily">
+          <div class="ctitle">10 日天气预报<span id="foot">数据来源 Open-Meteo · AQI 由 PM 浓度按国标估算</span></div>
+          <div id="dlist"></div>
+        </div>
+      </div>
     </div>
-    <div id="hero">
-      <div id="loc"></div>
-      <div id="curtemp">--°</div>
-      <div id="cond">获取中…</div>
-      <div id="hl"></div>
+  </section>
+
+  <!-- ============ P2 详情 ============ -->
+  <section class="page">
+    <div id="grid2">
+      <div class="card dcard">
+        <div class="ctitle">体感温度</div>
+        <div class="big" id="feelVal">--°</div>
+        <div class="desc" id="feelDesc">--</div>
+      </div>
+      <div class="card dcard">
+        <div class="ctitle">风</div>
+        <div style="display:flex;gap:6px;flex:1;min-height:0">
+          <div class="wrows" style="flex:1">
+            <div class="wr"><span>风</span><b id="windVal">--</b></div>
+            <div class="wr"><span>阵风</span><b id="gustVal">--</b></div>
+            <div class="wr"><span>方向</span><b id="wdirVal">--</b></div>
+          </div>
+          <div id="compass" style="flex:none;align-self:center"></div>
+        </div>
+      </div>
+      <div class="card dcard">
+        <div class="ctitle">紫外线指数</div>
+        <div class="big" id="uvVal">--</div>
+        <div class="sub" id="uvLvl">--</div>
+        <div class="gbar" style="background:linear-gradient(90deg,#4cd964,#ffcc00,#ff9f43,#ff5e3a,#b04ad8)">
+          <div class="gdot" id="uvDot" style="left:0%"></div>
+        </div>
+        <div class="desc" id="uvDesc">--</div>
+      </div>
+      <div class="card dcard">
+        <div class="ctitle">日出</div>
+        <div class="big" id="srVal">--:--</div>
+        <div id="sunarc" style="text-align:center;margin:2px 0"></div>
+        <div class="desc" id="ssVal" style="margin-top:0">日落 --:--</div>
+      </div>
+      <div class="card dcard">
+        <div class="ctitle">湿度</div>
+        <div class="big" id="humVal">--<small>%</small></div>
+        <div class="desc" id="dewVal">目前露点温度为 --°</div>
+      </div>
+      <div class="card dcard">
+        <div class="ctitle">气压</div>
+        <div id="pgauge" style="text-align:center;flex:1"></div>
+        <div class="desc" style="text-align:center" id="presDesc">--</div>
+      </div>
+      <div class="card dcard">
+        <div class="ctitle">能见度</div>
+        <div class="big" id="visVal">--<small>km</small></div>
+        <div class="desc" id="visDesc">--</div>
+      </div>
+      <div class="card dcard">
+        <div class="ctitle">降水</div>
+        <div class="big" id="rainVal">--<small>毫米</small></div>
+        <div class="sub">今天</div>
+        <div class="desc" id="rainDesc">--</div>
+      </div>
     </div>
-    <div id="summary"></div>
-    <div id="meta"></div>
-    <div id="alerts"></div>
-    <div id="aqi" class="card" style="display:none">
-      <div class="row"><span id="aqiVal">--</span><span id="aqiLvl">--</span></div>
-      <div id="aqiBar"><div id="aqiDot"></div></div>
-      <div id="aqiTxt"></div>
+  </section>
+
+  <!-- ============ P3 月相 / 平均 / AQI ============ -->
+  <section class="page">
+    <div id="grid3">
+      <div class="card" id="moonCard">
+        <div class="mrows">
+          <div id="moonName">--</div>
+          <div class="wr"><span>照亮比例</span><b id="moonIllum">--</b></div>
+          <div class="wr"><span>月龄</span><b id="moonAge">--</b></div>
+          <div class="wr"><span>距下次满月</span><b id="moonFull">--</b></div>
+          <div class="wr"><span>距下次新月</span><b id="moonNew">--</b></div>
+        </div>
+        <div id="moonPic" style="flex:none"></div>
+      </div>
+      <div class="card dcard">
+        <div class="ctitle">平均</div>
+        <div class="big" id="avgVal">--</div>
+        <div class="sub" id="avgDir">--</div>
+        <div class="wrows" style="margin-top:8px">
+          <div class="wr"><span>今天最高</span><b id="avgToday">--</b></div>
+          <div class="wr"><span>10日平均最高</span><b id="avgMean">--</b></div>
+        </div>
+      </div>
+      <div class="card dcard" id="aqi">
+        <div class="ctitle">空气质量</div>
+        <div class="row"><span id="aqiVal">--</span><span id="aqiLvl">--</span></div>
+        <div id="aqiBar"><div id="aqiDot"></div></div>
+        <div id="aqiTxt">--</div>
+      </div>
     </div>
-    <div id="status"><span id="dot"></span><span id="statusTxt">等待数据…</span></div>
-  </div>
-  <div id="right">
-    <div class="card">
-      <div class="ctitle">逐时预报</div>
-      <div id="hourly"></div>
-    </div>
-    <div class="card" id="daily">
-      <div class="ctitle">10 日天气预报<span id="foot">数据来源 Open-Meteo · AQI 由 PM 浓度按国标估算</span></div>
-      <div id="dlist"></div>
-    </div>
-  </div>
+  </section>
 </div>
+<div id="dots"><span class="on"></span><span></span><span></span></div>
+
 <script>
 'use strict';
 /* ================= 配置 ================= */
@@ -117,11 +244,12 @@ const CFG = {
   refreshMs: 30*60*1000,      // 天气刷新周期
   retryMs:   2*60*1000,       // 失败重试
   reloadMs:  6*3600*1000,     // 整页重载防内存累积
+  autoMs:    18*1000,         // 自动翻页周期
 };
 const FC_URL = 'https://api.open-meteo.com/v1/forecast?latitude='+CFG.lat+'&longitude='+CFG.lon
-  + '&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,weather_code,wind_speed_10m,wind_gusts_10m'
-  + '&hourly=temperature_2m,weather_code,precipitation_probability,is_day'
-  + '&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset,precipitation_probability_max'
+  + '&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,weather_code,wind_speed_10m,wind_gusts_10m,wind_direction_10m,pressure_msl'
+  + '&hourly=temperature_2m,weather_code,precipitation_probability,is_day,uv_index,visibility,dewpoint_2m'
+  + '&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset,precipitation_probability_max,precipitation_sum,uv_index_max'
   + '&timezone=Asia%2FShanghai&forecast_days=10';
 const AQ_URL = 'https://air-quality-api.open-meteo.com/v1/air-quality?latitude='+CFG.lat+'&longitude='+CFG.lon
   + '&current=pm2_5,pm10';
@@ -187,8 +315,120 @@ function aqiLevel(v){
   return ['严重污染','#b04ad8'];
 }
 
+/* ================= 风向 / 紫外线 / 能见度 ================= */
+const WDIR=['北','东北','东','东南','南','西南','西','西北'];
+function windCn(deg){ return WDIR[Math.round(deg/45)%8]+'风'; }
+function uvLevel(v){
+  if(v<3)  return ['低','#4cd964','接下来持续较低。'];
+  if(v<6)  return ['中等','#ffcc00','注意适当防晒。'];
+  if(v<8)  return ['高','#ff9f43','外出建议涂防晒霜。'];
+  if(v<11) return ['很高','#ff5e3a','尽量避免正午暴晒。'];
+  return ['极高','#b04ad8','避免户外活动。'];
+}
+function visDesc(km){
+  if(km>=20) return '视野极佳。';
+  if(km>=10) return '视野非常好。';
+  if(km>=5)  return '视野良好。';
+  if(km>=2)  return '视野中等。';
+  return '视野较差，注意出行安全。';
+}
+
+/* ================= 月相（天文算法） ================= */
+const SYN=29.530588853;   // 朔望月天数
+function moonInfo(now){
+  const ref=Date.UTC(2000,0,6,18,14);   // 2000-01-06 18:14 UTC 新月
+  const age=((now-ref)/86400000)%SYN;
+  const a=(age+SYN)%SYN;
+  const p=a/SYN;                          // 0=新月 0.5=满月
+  const illum=Math.round((1-Math.cos(2*Math.PI*p))/2*100);
+  const names=[[1.85,'新月'],[5.54,'娥眉月'],[9.23,'上弦月'],[12.92,'盈凸月'],
+               [16.61,'满月'],[20.30,'亏凸月'],[23.99,'下弦月'],[27.68,'残月'],[SYN,'新月']];
+  let nm='新月';
+  for(const [lim,n] of names){ if(a<=lim){ nm=n; break; } }
+  const toFull=a<=SYN/2 ? SYN/2-a : SYN-a+SYN/2;
+  const toNew =a<SYN/2  ? SYN-a   : 2*SYN-a-SYN/2+SYN/2-SYN/2; // = SYN-a when a>0
+  return {age:a,p,illum,name:nm,toFull,toNew:(SYN-a)%SYN};
+}
+function moonSVG(p,size){
+  const r=46,cx=50,cy=50;
+  const rx=Math.max(0.5,Math.abs(Math.cos(2*Math.PI*p))*r);
+  const waxing=p<0.5, s1=waxing?1:0;
+  const same=(p<0.25||p>0.75);
+  const s2=same?1-s1:s1;
+  const d='M 50 '+(cy-r)+' A '+r+' '+r+' 0 0 '+s1+' 50 '+(cy+r)
+        +' A '+rx.toFixed(1)+' '+r+' 0 0 '+s2+' 50 '+(cy-r)+' Z';
+  return '<svg width="'+size+'" height="'+size+'" viewBox="0 0 100 100">'
+    +'<defs><radialGradient id="mg" cx="42%" cy="40%" r="75%">'
+    +'<stop offset="0%" stop-color="#f5f7fc"/><stop offset="100%" stop-color="#c3cadb"/></radialGradient></defs>'
+    +'<circle cx="50" cy="50" r="46" fill="rgba(8,14,30,.85)" stroke="rgba(255,255,255,.16)"/>'
+    +'<path d="'+d+'" fill="url(#mg)"/></svg>';
+}
+
+/* ================= 罗盘 / 气压表盘 / 太阳弧线 ================= */
+function compassSVG(deg,speed,size){
+  let ticks='';
+  for(let i=0;i<72;i++){
+    const a=i*5*Math.PI/180, R=58, r1=i%18===0?51:(i%6===0?54:56);
+    ticks+='<line x1="'+(60+Math.sin(a)*r1)+'" y1="'+(60-Math.cos(a)*r1)
+      +'" x2="'+(60+Math.sin(a)*R)+'" y2="'+(60-Math.cos(a)*R)
+      +'" stroke="rgba(255,255,255,'+(i%18===0?'.55':'.22')+')" stroke-width="'+(i%18===0?1.6:1)+'"/>';
+  }
+  const lbl=(t,x,y)=>'<text x="'+x+'" y="'+y+'" fill="rgba(235,240,255,.7)" font-size="11" font-weight="600" text-anchor="middle" dominant-baseline="middle">'+t+'</text>';
+  const a=deg*Math.PI/180;
+  const ax=60+Math.sin(a)*40, ay=60-Math.cos(a)*40;
+  return '<svg width="'+size+'" height="'+size+'" viewBox="0 0 120 120">'+ticks
+    +lbl('北',60,9)+lbl('东',111,61)+lbl('南',60,113)+lbl('西',9,61)
+    +'<line x1="60" y1="60" x2="'+ax.toFixed(1)+'" y2="'+ay.toFixed(1)+'" stroke="#eef1f7" stroke-width="2.4" '+S+'/>'
+    +'<polygon points="'+ax.toFixed(1)+','+ay.toFixed(1)+' '
+      +(60+Math.sin((deg-8)*Math.PI/180)*30).toFixed(1)+','+(60-Math.cos((deg-8)*Math.PI/180)*30).toFixed(1)+' '
+      +(60+Math.sin((deg+8)*Math.PI/180)*30).toFixed(1)+','+(60-Math.cos((deg+8)*Math.PI/180)*30).toFixed(1)
+      +'" fill="#eef1f7"/>'
+    +'<text x="60" y="56" fill="#fff" font-size="17" font-weight="600" text-anchor="middle">'+speed+'</text>'
+    +'<text x="60" y="70" fill="rgba(235,240,255,.6)" font-size="8.5" text-anchor="middle">km/h</text>'
+    +'</svg>';
+}
+function pressureSVG(hpa,size){
+  const lo=960,hi=1050;
+  const f=Math.max(0,Math.min(1,(hpa-lo)/(hi-lo)));
+  const A0=-120, A1=120;
+  const pol=(a,r)=>{const t=a*Math.PI/180;return [60+Math.sin(t)*r, 60-Math.cos(t)*r];};
+  let ticks='';
+  for(let i=0;i<=40;i++){
+    const a=A0+(A1-A0)*i/40, [x1,y1]=pol(a,i%10===0?47:52), [x2,y2]=pol(a,58);
+    ticks+='<line x1="'+x1.toFixed(1)+'" y1="'+y1.toFixed(1)+'" x2="'+x2.toFixed(1)+'" y2="'+y2.toFixed(1)
+      +'" stroke="rgba(255,255,255,'+(i%10===0?'.5':'.2')+')" stroke-width="'+(i%10===0?1.6:1)+'"/>';
+  }
+  const na=A0+(A1-A0)*f, [nx,ny]=pol(na,44);
+  const [lx1,ly1]=pol(na-4,52), [lx2,ly2]=pol(na+4,52);
+  return '<svg width="'+size+'" height="'+size+'" viewBox="0 0 120 120">'+ticks
+    +'<polygon points="'+nx.toFixed(1)+','+ny.toFixed(1)+' '+lx1.toFixed(1)+','+ly1.toFixed(1)+' '+lx2.toFixed(1)+','+ly2.toFixed(1)+'" fill="#eef1f7"/>'
+    +'<text x="60" y="60" fill="#fff" font-size="19" font-weight="600" text-anchor="middle">'+Math.round(hpa)+'</text>'
+    +'<text x="60" y="74" fill="rgba(235,240,255,.6)" font-size="9" text-anchor="middle">hPa</text>'
+    +'<text x="14" y="100" fill="rgba(235,240,255,.55)" font-size="10">低</text>'
+    +'<text x="106" y="100" fill="rgba(235,240,255,.55)" font-size="10" text-anchor="end">高</text>'
+    +'</svg>';
+}
+function sunArcSVG(frac,day,size){
+  const w=180,h=62;
+  const x1=14,x2=166,cy=54,r=70;
+  // 半圆弧: 从 (x1,cy) 到 (x2,cy), 顶点在上方
+  const f=Math.max(0,Math.min(1,frac));
+  // 参数化: 角度 180°->0°
+  const th=Math.PI*(1-f);
+  const mx=(x1+x2)/2, rx=(x2-x1)/2, ry=42;
+  const sx=mx+rx*Math.cos(th), sy=cy-ry*Math.sin(th);
+  const path='M '+x1+' '+cy+' A '+rx+' '+ry+' 0 0 1 '+x2+' '+cy;
+  let sun;
+  if(day) sun='<circle cx="'+sx.toFixed(1)+'" cy="'+sy.toFixed(1)+'" r="7" fill="#ffd60a" stroke="rgba(255,255,255,.85)" stroke-width="2"/>';
+  else sun='<circle cx="'+(f<1?sx.toFixed(1):x2)+'" cy="'+cy+'" r="6.5" fill="none" stroke="rgba(255,255,255,.65)" stroke-width="2"/>';
+  return '<svg width="'+size+'" viewBox="0 0 '+w+' '+h+'">'
+    +'<path d="'+path+'" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="2"/>'
+    +'<line x1="6" y1="'+cy+'" x2="174" y2="'+cy+'" stroke="rgba(255,255,255,.35)" stroke-width="1.5"/>'
+    +sun+'</svg>';
+}
+
 /* ================= 状态 ================= */
-let lastFC=null, lastAQ=null, lastOK=0;
+let lastFC=null, lastAQ=null;
 const $=id=>document.getElementById(id);
 
 /* ================= 时钟 ================= */
@@ -213,9 +453,8 @@ function buildStars(){
   }
 }
 
-/* ================= 渲染 ================= */
-function render(){
-  if(!lastFC) return;
+/* ================= 渲染 P1 ================= */
+function renderP1(){
   const c=lastFC.current, day=c.is_day===1;
   document.body.classList.toggle('day', day);
   $('stars').style.display = day?'none':'block';
@@ -261,7 +500,7 @@ function render(){
   }
   $('hourly').innerHTML=hh;
 
-  /* 7 日 */
+  /* 10 日 */
   let wmin=99,wmax=-99;
   for(let i=0;i<d0.time.length;i++){ wmin=Math.min(wmin,d0.temperature_2m_min[i]); wmax=Math.max(wmax,d0.temperature_2m_max[i]); }
   const span=Math.max(1,wmax-wmin);
@@ -287,17 +526,112 @@ function render(){
       +'<div class="dhi">'+hi+'°</div></div>';
   }
   $('dlist').innerHTML=dh;
+}
+
+/* ================= 渲染 P2 ================= */
+function renderP2(){
+  const c=lastFC.current, d0=lastFC.daily;
+  const h=lastFC.hourly;
+  let i0=h.time.indexOf(c.time); if(i0<0)i0=0;
+
+  /* 体感 */
+  const feel=Math.round(c.apparent_temperature), act=Math.round(c.temperature_2m);
+  $('feelVal').textContent=feel+'°';
+  const fd=feel-act;
+  $('feelDesc').textContent = fd>=2 ? '体感温度更高。' : (fd<=-2 ? '体感温度更低。' : '与实际温度相近。');
+
+  /* 风 */
+  $('windVal').textContent=Math.round(c.wind_speed_10m)+' km/h';
+  $('gustVal').textContent=Math.round(c.wind_gusts_10m||0)+' km/h';
+  $('wdirVal').textContent=windCn(c.wind_direction_10m)+' '+Math.round(c.wind_direction_10m)+'°';
+  $('compass').innerHTML=compassSVG(c.wind_direction_10m,Math.round(c.wind_speed_10m),108);
+
+  /* 紫外线 (白天用当前小时值, 夜间显示明日峰值提示) */
+  const uvNow=(h.uv_index&&h.uv_index[i0]!=null)?h.uv_index[i0]:0;
+  const uvMax=d0.uv_index_max?d0.uv_index_max[0]:uvNow;
+  const uv=Math.round(uvNow*10)/10;
+  const [ulvl,ucol,udesc]=uvLevel(uv);
+  $('uvVal').textContent=uv;
+  $('uvLvl').textContent=ulvl; $('uvLvl').style.color=ucol;
+  $('uvDot').style.left=Math.min(100,uv/11*100)+'%';
+  $('uvDesc').textContent=c.is_day? udesc : ('今日峰值 '+Math.round(uvMax)+'，夜间较弱。');
+
+  /* 日出日落弧线 */
+  const sr=d0.sunrise[0], ss=d0.sunset[0];
+  $('srVal').textContent=sr.slice(11);
+  $('ssVal').textContent='日落 '+ss.slice(11);
+  const now=new Date(), t0=new Date(sr), t1=new Date(ss);
+  const frac=(now-t0)/Math.max(1,(t1-t0));
+  $('sunarc').innerHTML=sunArcSVG(frac,c.is_day===1&&frac>=0&&frac<=1,176);
+
+  /* 湿度 / 露点 */
+  $('humVal').innerHTML=c.relative_humidity_2m+'<small>%</small>';
+  const dew=(h.dewpoint_2m&&h.dewpoint_2m[i0]!=null)?Math.round(h.dewpoint_2m[i0]):null;
+  $('dewVal').textContent='目前露点温度为 '+(dew==null?'--':dew+'°')+'。';
+
+  /* 气压 */
+  const hpa=c.pressure_msl;
+  $('pgauge').innerHTML=pressureSVG(hpa,116);
+  $('presDesc').textContent= hpa>=1022?'气压偏高，天气稳定。':(hpa<=1005?'气压偏低，易有天气变化。':'气压正常。');
+
+  /* 能见度 */
+  const visM=(h.visibility&&h.visibility[i0]!=null)?h.visibility[i0]:null;
+  const visKm=visM==null?null:Math.round(visM/100)/10;
+  $('visVal').innerHTML=(visKm==null?'--':visKm)+'<small>km</small>';
+  $('visDesc').textContent=visKm==null?'':visDesc(visKm);
+
+  /* 降水 */
+  const sum0=d0.precipitation_sum?d0.precipitation_sum[0]:0;
+  $('rainVal').innerHTML=(Math.round(sum0*10)/10)+'<small>毫米</small>';
+  let rd='未来 10 天无明显降水。';
+  for(let i=1;i<d0.time.length;i++){
+    const s=d0.precipitation_sum?d0.precipitation_sum[i]:0;
+    if(s>=0.5){
+      const dt=new Date(d0.time[i]+'T00:00:00');
+      rd='预计'+WD[dt.getDay()]+'会有 '+(Math.round(s*10)/10)+' 毫米。';
+      break;
+    }
+  }
+  $('rainDesc').textContent=rd;
+}
+
+/* ================= 渲染 P3 ================= */
+function renderP3(){
+  const d0=lastFC.daily;
+
+  /* 月相 */
+  const mi=moonInfo(Date.now());
+  $('moonName').textContent=mi.name;
+  $('moonIllum').textContent=mi.illum+'%';
+  $('moonAge').textContent=(Math.round(mi.age*10)/10)+' 天';
+  $('moonFull').textContent= mi.toFull<0.5?'就是今天':Math.round(mi.toFull)+' 天';
+  $('moonNew').textContent = mi.toNew<0.5 ?'就是今天':Math.round(mi.toNew)+' 天';
+  $('moonPic').innerHTML=moonSVG(mi.p,150);
+
+  /* 平均 (10 日预报内最高温均值) */
+  const tmax0=Math.round(d0.temperature_2m_max[0]);
+  let sm=0; for(let i=0;i<d0.time.length;i++) sm+=d0.temperature_2m_max[i];
+  const mean=Math.round(sm/d0.time.length);
+  const diff=tmax0-mean;
+  $('avgVal').textContent=(diff>=0?'+':'')+diff+'°';
+  $('avgDir').textContent=(diff>=0?'高于':'低于')+'10日均最高温';
+  $('avgToday').textContent=tmax0+'°';
+  $('avgMean').textContent=mean+'°';
 
   /* AQI */
   if(lastAQ&&lastAQ.current){
     const v=cnAqi(lastAQ.current.pm2_5,lastAQ.current.pm10);
     const [lv,col]=aqiLevel(v);
-    $('aqi').style.display='block';
     $('aqiVal').textContent=v; $('aqiVal').style.color=col;
     $('aqiLvl').textContent=lv; $('aqiLvl').style.color=col;
     $('aqiDot').style.left=Math.min(100,v/300*100)+'%';
     $('aqiTxt').textContent='当前 AQI (CN) 为 '+v+'（PM2.5 '+lastAQ.current.pm2_5+' / PM10 '+lastAQ.current.pm10+' μg/m³）';
   }
+}
+
+function render(){
+  if(!lastFC) return;
+  renderP1(); renderP2(); renderP3();
 }
 
 /* ================= 状态提示 ================= */
@@ -310,6 +644,38 @@ function setStatus(ok){
   }
 }
 
+/* ================= 翻页 ================= */
+const NPAGES=3;
+let page=0, _at=null;
+function go(p){
+  page=((p%NPAGES)+NPAGES)%NPAGES;
+  $('pager').style.transform='translateX('+(-page*100)+'vw)';
+  const ds=$('dots').children;
+  for(let i=0;i<ds.length;i++) ds[i].className=i===page?'on':'';
+}
+function scheduleAuto(){
+  clearTimeout(_at);
+  _at=setTimeout(()=>{ go(page+1); scheduleAuto(); }, CFG.autoMs);
+}
+let _tx=null;
+document.addEventListener('touchstart',e=>{ _tx=e.touches[0].clientX; },{passive:true});
+document.addEventListener('touchend',e=>{
+  if(_tx==null) return;
+  const dx=e.changedTouches[0].clientX-_tx; _tx=null;
+  if(Math.abs(dx)>50){ go(page+(dx<0?1:-1)); scheduleAuto(); }
+},{passive:true});
+document.addEventListener('mousedown',e=>{ _tx=e.clientX; });
+document.addEventListener('mouseup',e=>{
+  if(_tx==null) return;
+  const dx=e.clientX-_tx; _tx=null;
+  if(Math.abs(dx)>50){ go(page+(dx<0?1:-1)); scheduleAuto(); }
+});
+$('dots').addEventListener('click',e=>{
+  const i=[...$('dots').children].indexOf(e.target);
+  if(i>=0){ go(i); scheduleAuto(); }
+});
+scheduleAuto();
+
 /* ================= 拉取 ================= */
 async function pull(){
   let ok=true;
@@ -317,7 +683,7 @@ async function pull(){
   catch(e){ ok=false; }
   try{ const r2=await fetch(AQ_URL,{cache:'no-store'}); if(!r2.ok) throw 0; lastAQ=await r2.json(); }
   catch(e){}
-  if(ok){ lastOK=Date.now(); render(); }
+  if(ok){ render(); }
   setStatus(ok);
   setTimeout(pull, ok?CFG.refreshMs:CFG.retryMs);
 }
