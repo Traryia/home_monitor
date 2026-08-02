@@ -19,7 +19,7 @@ body.day{background:linear-gradient(180deg,#2e6ab8 0%,#4f8fd4 55%,#7db4e6 100%)}
 @keyframes tw{0%,100%{opacity:.15}50%{opacity:.85}}
 .cloud{position:fixed;border-radius:50%;background:rgba(255,255,255,.07);filter:blur(28px);pointer-events:none;z-index:0}
 /* ---------- pager ---------- */
-#pager{display:flex;width:300vw;height:100vh;position:relative;z-index:1;
+#pager{display:flex;width:200vw;height:100vh;position:relative;z-index:1;
   transition:transform .45s ease}
 .page{width:100vw;height:100vh;padding:14px;flex:none;overflow:hidden}
 #dots{position:fixed;bottom:8px;left:50%;transform:translateX(-50%);z-index:5;
@@ -28,82 +28,85 @@ body.day{background:linear-gradient(180deg,#2e6ab8 0%,#4f8fd4 55%,#7db4e6 100%)}
   transition:background .3s}
 #dots span.on{background:#fff}
 /* ---------- cards ---------- */
-.card{background:rgba(13,24,48,.55);border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:10px 13px}
+.card{background:rgba(13,24,48,.55);border:1px solid rgba(255,255,255,.09);border-radius:16px;padding:12px 16px}
 body.day .card{background:rgba(8,30,66,.32)}
-.ctitle{font-size:12px;color:rgba(235,240,255,.55);font-weight:600;margin-bottom:8px;display:flex;align-items:center;gap:5px}
-.ctitle svg{flex:none}
+.ctitle{font-size:13px;color:rgba(235,240,255,.55);font-weight:600;margin-bottom:6px;display:flex;align-items:center;gap:5px}
 /* ---------- page 1 ---------- */
-#app{display:grid;grid-template-columns:336px 1fr;gap:12px;height:100%}
-#left{display:flex;flex-direction:column;gap:6px;min-height:0}
+#app{display:grid;grid-template-columns:352px 1fr;gap:12px;height:100%}
+#left{display:flex;flex-direction:column;min-height:0}
 #topbar{display:flex;align-items:baseline;gap:10px}
-#clock{font-size:30px;font-weight:600;line-height:1;letter-spacing:0}
-#date{font-size:13px;color:rgba(235,240,255,.65)}
-#hero{text-align:center;margin:8px 0 4px}
-#loc{display:flex;align-items:center;justify-content:center;gap:6px;font-size:23px;font-weight:600}
+#clock{font-size:36px;font-weight:600;line-height:1;letter-spacing:0}
+#date{font-size:14px;color:rgba(235,240,255,.65)}
+#hero{text-align:center;margin-top:10px}
+#loc{display:flex;align-items:center;justify-content:center;gap:6px;font-size:24px;font-weight:600}
 #loc svg{flex:none}
-#curtemp{font-size:96px;font-weight:200;line-height:1.05;margin-left:-4px}
-#cond{font-size:17px;font-weight:500}
-#hl{font-size:14px;color:rgba(235,240,255,.85);margin-top:3px}
-#summary{font-size:13px;color:rgba(235,240,255,.78);line-height:1.5;margin-top:6px}
-#meta{font-size:12.5px;color:rgba(235,240,255,.62);margin-top:4px;line-height:1.6;text-align:center}
-.alert{display:flex;gap:10px;align-items:flex-start}
-.alert .t{font-size:15px;font-weight:700}
-.alert .d{font-size:12.5px;color:rgba(235,240,255,.72);margin-top:2px;line-height:1.45}
-#alerts{display:flex;flex-direction:column;gap:6px;margin-top:6px}
-#status{margin-top:auto;font-size:11.5px;color:rgba(235,240,255,.45);display:flex;align-items:center;gap:6px}
-#dot{width:7px;height:7px;border-radius:50%;background:#4cd964;flex:none}
+#curtemp{font-size:112px;font-weight:200;line-height:1.05;margin-left:-5px}
+#cond{font-size:19px;font-weight:500}
+#hl{font-size:15.5px;color:rgba(235,240,255,.85);margin-top:3px}
+#summary{font-size:14px;color:rgba(235,240,255,.8);line-height:1.55;margin-top:10px}
+#meta{font-size:13.5px;color:rgba(235,240,255,.62);margin-top:6px;line-height:1.7;text-align:center}
+#alerts{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.alert{display:flex;gap:10px;align-items:center}
+.alert .t{font-size:16px;font-weight:700}
+.alert .d{font-size:13.5px;color:rgba(235,240,255,.75);margin-top:2px;line-height:1.45}
+#status{margin-top:auto;font-size:12.5px;color:rgba(235,240,255,.45);display:flex;align-items:center;gap:6px}
+#dot{width:8px;height:8px;border-radius:50%;background:#4cd964;flex:none}
 #right{display:flex;flex-direction:column;gap:12px;min-width:0;min-height:0}
 #hourly{display:flex;justify-content:space-between}
 .hitem{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:4px}
-.hitem .ht{font-size:12.5px;color:rgba(235,240,255,.75);font-weight:600}
-.hitem .hp{font-size:10.5px;color:#6ec6ff;height:12px;font-weight:600}
-.hitem .hv{font-size:15.5px;font-weight:600}
+.hitem .ht{font-size:13.5px;color:rgba(235,240,255,.75);font-weight:600}
+.hitem .hp{font-size:11.5px;color:#6ec6ff;height:13px;font-weight:600}
+.hitem .hv{font-size:16px;font-weight:600}
 #daily{flex:1;display:flex;flex-direction:column;min-height:0}
 #dlist{flex:1;display:flex;flex-direction:column;justify-content:space-between}
-.drow{display:flex;align-items:center;gap:8px;border-top:1px solid rgba(255,255,255,.07);padding:1px 0}
+.drow{display:flex;align-items:center;gap:10px;border-top:1px solid rgba(255,255,255,.07)}
 .drow:first-child{border-top:none}
-.dday{width:40px;font-size:14.5px;font-weight:600;flex:none}
-.dicon{width:56px;flex:none;display:flex;flex-direction:column;align-items:center}
-.dp{font-size:10px;color:#6ec6ff;height:11px;font-weight:600}
-.dlo{width:34px;text-align:right;font-size:15px;color:rgba(235,240,255,.55);flex:none}
-.dhi{width:36px;font-size:15px;font-weight:600;flex:none}
-.dbar{position:relative;flex:1;height:4.5px;border-radius:3px;background:rgba(255,255,255,.14);margin:0 6px}
+.dday{width:44px;font-size:15.5px;font-weight:600;flex:none}
+.dicon{width:60px;flex:none;display:flex;flex-direction:column;align-items:center}
+.dp{font-size:10.5px;color:#6ec6ff;height:12px;font-weight:600}
+.dlo{width:38px;text-align:right;font-size:15.5px;color:rgba(235,240,255,.55);flex:none}
+.dhi{width:40px;font-size:15.5px;font-weight:600;flex:none}
+.dbar{position:relative;flex:1;height:6px;border-radius:3px;background:rgba(255,255,255,.14);margin:0 8px}
 .dseg{position:absolute;top:0;height:100%;border-radius:3px}
-.dnow{position:absolute;top:50%;width:8px;height:8px;border-radius:50%;background:#fff;
+.dnow{position:absolute;top:50%;width:9px;height:9px;border-radius:50%;background:#fff;
   border:1.5px solid rgba(0,0,0,.3);transform:translate(-50%,-50%)}
-#foot{margin-left:auto;font-weight:400;font-size:10px;color:rgba(235,240,255,.35)}
-/* ---------- page 2: detail grid ---------- */
+#foot{margin-left:auto;font-weight:400;font-size:10.5px;color:rgba(235,240,255,.35)}
+/* ---------- page 2: 4x2 大卡 ---------- */
 #grid2{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:1fr 1fr;gap:12px;height:100%}
-.dcard{display:flex;flex-direction:column;min-height:0}
-.dcard .big{font-size:44px;font-weight:300;line-height:1.1}
+.dcard{display:flex;flex-direction:column;min-height:0;min-width:0}
+.dcard .big{font-size:46px;font-weight:300;line-height:1.12}
 .dcard .big small{font-size:20px;font-weight:400;color:rgba(235,240,255,.75)}
-.dcard .sub{font-size:13px;font-weight:600;margin-top:1px}
-.dcard .desc{font-size:12px;color:rgba(235,240,255,.62);margin-top:auto;line-height:1.45}
-.wrows{display:flex;flex-direction:column;font-size:13.5px}
-.wrows .wr{display:flex;justify-content:space-between;border-top:1px solid rgba(255,255,255,.08);padding:4.5px 0}
+.dcard .sub{font-size:14px;font-weight:600;margin-top:2px}
+.dcard .desc{font-size:12.5px;color:rgba(235,240,255,.62);margin-top:auto;line-height:1.5}
+.sect{padding:2px 0}
+.pair{justify-content:space-between}
+.pair .sect+.sect{border-top:1px solid rgba(255,255,255,.09);padding-top:10px}
+.sect .slabel{font-size:12.5px;color:rgba(235,240,255,.55);font-weight:600;margin-bottom:4px}
+.sect .sval{font-size:34px;font-weight:300;line-height:1.15}
+.sect .sval small{font-size:16px;color:rgba(235,240,255,.7)}
+.sect .snote{font-size:12px;color:rgba(235,240,255,.6);margin-top:3px;line-height:1.45}
+.wrows{display:flex;flex-direction:column;font-size:15px}
+.wrows .wr{display:flex;justify-content:space-between;border-top:1px solid rgba(255,255,255,.08);padding:5.5px 0}
 .wrows .wr:first-child{border-top:none}
 .wrows .wr b{font-weight:600}
 .wrows .wr span{color:rgba(235,240,255,.62)}
-.gbar{position:relative;height:5px;border-radius:3px;margin:9px 0 7px}
-.gdot{position:absolute;top:50%;width:9px;height:9px;border-radius:50%;background:#fff;
+.gbar{position:relative;height:6px;border-radius:3px;margin:10px 0 8px}
+.gdot{position:absolute;top:50%;width:10px;height:10px;border-radius:50%;background:#fff;
   border:2px solid rgba(0,0,0,.35);transform:translate(-50%,-50%)}
-/* ---------- page 3 ---------- */
-#grid3{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1.05fr 1fr;gap:12px;height:100%}
-#moonCard{grid-column:1/3;display:flex;align-items:center;gap:18px}
-#moonCard .mrows{flex:1;display:flex;flex-direction:column;font-size:14px}
-#moonCard .mrows .wr{display:flex;justify-content:space-between;border-top:1px solid rgba(255,255,255,.08);padding:6px 0}
+#moonCard .mrows{display:flex;flex-direction:column;font-size:13.5px}
+#moonCard .mrows .wr{display:flex;justify-content:space-between;border-top:1px solid rgba(255,255,255,.08);padding:4.5px 0}
 #moonCard .mrows .wr:first-child{border-top:none}
-#moonCard .mrows .wr b{font-weight:600}
+#moonCard .mrows .wr b{font-weight:600;white-space:nowrap}
 #moonCard .mrows .wr span{color:rgba(235,240,255,.62)}
-#moonName{font-size:20px;font-weight:700;margin-bottom:4px}
-#aqi .row{display:flex;align-items:baseline;gap:8px}
-#aqiVal{font-size:40px;font-weight:300}
+#moonName{font-size:19px;font-weight:700}
+#aqi .row{display:flex;align-items:baseline;gap:8px;margin-top:auto}
+#aqiVal{font-size:46px;font-weight:300}
 #aqiLvl{font-size:16px;font-weight:600}
-#aqiBar{position:relative;height:5px;border-radius:3px;margin:10px 0 8px;
+#aqiBar{position:relative;height:6px;border-radius:3px;margin:12px 0 9px;
   background:linear-gradient(90deg,#4cd964 0%,#a3e048 17%,#ffcc00 33%,#ff9f43 50%,#ff5e3a 67%,#b04ad8 84%,#8b1e3f 100%)}
-#aqiDot{position:absolute;top:50%;width:9px;height:9px;border-radius:50%;background:#fff;
+#aqiDot{position:absolute;top:50%;width:10px;height:10px;border-radius:50%;background:#fff;
   border:2px solid rgba(0,0,0,.35);transform:translate(-50%,-50%)}
-#aqiTxt{font-size:12px;color:rgba(235,240,255,.62);margin-top:auto}
+#aqiTxt{font-size:12px;color:rgba(235,240,255,.62);margin-top:auto;line-height:1.5}
 </style>
 </head>
 <body>
@@ -145,84 +148,77 @@ body.day .card{background:rgba(8,30,66,.32)}
     </div>
   </section>
 
-  <!-- ============ P2 详情 ============ -->
+  <!-- ============ P2 详情 4x2 ============ -->
   <section class="page">
     <div id="grid2">
-      <div class="card dcard">
-        <div class="ctitle">体感温度</div>
-        <div class="big" id="feelVal">--°</div>
-        <div class="desc" id="feelDesc">--</div>
+      <div class="card dcard pair">
+        <div class="sect">
+          <div class="slabel">体感温度</div>
+          <div class="sval" id="feelVal">--°</div>
+          <div class="snote" id="feelDesc">--</div>
+        </div>
+        <div class="sect">
+          <div class="slabel">平均</div>
+          <div class="sval" id="avgVal">--</div>
+          <div class="snote" id="avgDesc">--</div>
+        </div>
       </div>
       <div class="card dcard">
         <div class="ctitle">风</div>
-        <div style="display:flex;gap:6px;flex:1;min-height:0">
-          <div class="wrows" style="flex:1">
-            <div class="wr"><span>风</span><b id="windVal">--</b></div>
-            <div class="wr"><span>阵风</span><b id="gustVal">--</b></div>
-            <div class="wr"><span>方向</span><b id="wdirVal">--</b></div>
-          </div>
-          <div id="compass" style="flex:none;align-self:center"></div>
+        <div class="wrows">
+          <div class="wr"><span>风</span><b id="windVal">--</b></div>
+          <div class="wr"><span>阵风</span><b id="gustVal">--</b></div>
+          <div class="wr"><span>方向</span><b id="wdirVal">--</b></div>
         </div>
+        <div id="compass" style="text-align:center;margin-top:auto"></div>
       </div>
-      <div class="card dcard">
-        <div class="ctitle">紫外线指数</div>
-        <div class="big" id="uvVal">--</div>
-        <div class="sub" id="uvLvl">--</div>
-        <div class="gbar" style="background:linear-gradient(90deg,#4cd964,#ffcc00,#ff9f43,#ff5e3a,#b04ad8)">
-          <div class="gdot" id="uvDot" style="left:0%"></div>
+      <div class="card dcard pair">
+        <div class="sect">
+          <div class="slabel">紫外线指数</div>
+          <div class="sval"><span id="uvVal">--</span> <small id="uvLvl"></small></div>
+          <div class="gbar" style="background:linear-gradient(90deg,#4cd964,#ffcc00,#ff9f43,#ff5e3a,#b04ad8)">
+            <div class="gdot" id="uvDot" style="left:0%"></div>
+          </div>
         </div>
-        <div class="desc" id="uvDesc">--</div>
+        <div class="sect">
+          <div class="slabel">能见度</div>
+          <div class="sval" id="visVal">--<small>km</small></div>
+          <div class="snote" id="visDesc">--</div>
+        </div>
       </div>
       <div class="card dcard">
         <div class="ctitle">日出</div>
         <div class="big" id="srVal">--:--</div>
-        <div id="sunarc" style="text-align:center;margin:2px 0"></div>
-        <div class="desc" id="ssVal" style="margin-top:0">日落 --:--</div>
+        <div id="sunarc" style="text-align:center;margin:auto 0"></div>
+        <div class="desc" style="margin-top:0;font-size:14px" id="ssVal">日落 --:--</div>
       </div>
-      <div class="card dcard">
-        <div class="ctitle">湿度</div>
-        <div class="big" id="humVal">--<small>%</small></div>
-        <div class="desc" id="dewVal">目前露点温度为 --°</div>
+      <div class="card dcard pair">
+        <div class="sect">
+          <div class="slabel">湿度</div>
+          <div class="sval" id="humVal">--<small>%</small></div>
+          <div class="snote" id="dewVal">露点温度 --°</div>
+        </div>
+        <div class="sect">
+          <div class="slabel">降水</div>
+          <div class="sval" id="rainVal">--<small>毫米</small></div>
+          <div class="snote" id="rainDesc">--</div>
+        </div>
       </div>
       <div class="card dcard">
         <div class="ctitle">气压</div>
-        <div id="pgauge" style="text-align:center;flex:1"></div>
-        <div class="desc" style="text-align:center" id="presDesc">--</div>
+        <div id="pgauge" style="text-align:center;margin:auto 0"></div>
+        <div class="desc" style="text-align:center;margin-top:0" id="presDesc">--</div>
       </div>
-      <div class="card dcard">
-        <div class="ctitle">能见度</div>
-        <div class="big" id="visVal">--<small>km</small></div>
-        <div class="desc" id="visDesc">--</div>
-      </div>
-      <div class="card dcard">
-        <div class="ctitle">降水</div>
-        <div class="big" id="rainVal">--<small>毫米</small></div>
-        <div class="sub">今天</div>
-        <div class="desc" id="rainDesc">--</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ P3 月相 / 平均 / AQI ============ -->
-  <section class="page">
-    <div id="grid3">
-      <div class="card" id="moonCard">
-        <div class="mrows">
+      <div class="card dcard" id="moonCard">
+        <div style="display:flex;align-items:baseline;justify-content:space-between">
+          <div class="ctitle" style="margin-bottom:0">月相</div>
           <div id="moonName">--</div>
+        </div>
+        <div id="moonPic" style="text-align:center;margin:4px 0"></div>
+        <div class="mrows">
           <div class="wr"><span>照亮比例</span><b id="moonIllum">--</b></div>
           <div class="wr"><span>月龄</span><b id="moonAge">--</b></div>
           <div class="wr"><span>距下次满月</span><b id="moonFull">--</b></div>
-          <div class="wr"><span>距下次新月</span><b id="moonNew">--</b></div>
-        </div>
-        <div id="moonPic" style="flex:none"></div>
-      </div>
-      <div class="card dcard">
-        <div class="ctitle">平均</div>
-        <div class="big" id="avgVal">--</div>
-        <div class="sub" id="avgDir">--</div>
-        <div class="wrows" style="margin-top:8px">
-          <div class="wr"><span>今天最高</span><b id="avgToday">--</b></div>
-          <div class="wr"><span>10日平均最高</span><b id="avgMean">--</b></div>
         </div>
       </div>
       <div class="card dcard" id="aqi">
@@ -234,7 +230,7 @@ body.day .card{background:rgba(8,30,66,.32)}
     </div>
   </section>
 </div>
-<div id="dots"><span class="on"></span><span></span><span></span></div>
+<div id="dots"><span class="on"></span><span></span></div>
 
 <script>
 'use strict';
@@ -296,8 +292,8 @@ function icon(kind,day,size){
   else if(kind==='thunder') g = '<g transform="translate(0,-1.5)">'+CLOUD+'</g>'+BOLT;
   return '<svg width="'+size+'" height="'+size+'" viewBox="0 0 24 24">'+g+'</svg>';
 }
-const PIN='<svg width="15" height="15" viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z" fill="#f2f6ff"/></svg>';
-const WARN='<svg width="20" height="20" viewBox="0 0 24 24"><path d="M12 3 1.8 20.2h20.4zm0 6.2v4.6" stroke="#ffd60a" stroke-width="2" fill="#ffd60a" '+S+'/><circle cx="12" cy="17.4" r="1.3" fill="#3a2b00"/><path d="M12 3 1.8 20.2h20.4z" fill="rgba(255,214,10,.18)" stroke="#ffd60a" stroke-width="1.6" stroke-linejoin="round"/></svg>';
+const PIN='<svg width="16" height="16" viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z" fill="#f2f6ff"/></svg>';
+const WARN='<svg width="22" height="22" viewBox="0 0 24 24"><path d="M12 3 1.8 20.2h20.4zm0 6.2v4.6" stroke="#ffd60a" stroke-width="2" fill="#ffd60a" '+S+'/><circle cx="12" cy="17.4" r="1.3" fill="#3a2b00"/><path d="M12 3 1.8 20.2h20.4z" fill="rgba(255,214,10,.18)" stroke="#ffd60a" stroke-width="1.6" stroke-linejoin="round"/></svg>';
 
 /* ================= CN AQI (HJ 633-2012, PM 24h 断点) ================= */
 const BP25=[0,35,75,115,150,250,350,500], BP10=[0,50,150,250,350,420,500,600], IA=[0,50,100,150,200,300,400,500];
@@ -345,7 +341,6 @@ function moonInfo(now){
   let nm='新月';
   for(const [lim,n] of names){ if(a<=lim){ nm=n; break; } }
   const toFull=a<=SYN/2 ? SYN/2-a : SYN-a+SYN/2;
-  const toNew =a<SYN/2  ? SYN-a   : 2*SYN-a-SYN/2+SYN/2-SYN/2; // = SYN-a when a>0
   return {age:a,p,illum,name:nm,toFull,toNew:(SYN-a)%SYN};
 }
 function moonSVG(p,size){
@@ -409,10 +404,8 @@ function pressureSVG(hpa,size){
 }
 function sunArcSVG(frac,day,size){
   const w=180,h=62;
-  const x1=14,x2=166,cy=54,r=70;
-  // 半圆弧: 从 (x1,cy) 到 (x2,cy), 顶点在上方
+  const x1=14,x2=166,cy=54;
   const f=Math.max(0,Math.min(1,frac));
-  // 参数化: 角度 180°->0°
   const th=Math.PI*(1-f);
   const mx=(x1+x2)/2, rx=(x2-x1)/2, ry=42;
   const sx=mx+rx*Math.cos(th), sy=cy-ry*Math.sin(th);
@@ -494,7 +487,7 @@ function renderP1(){
     const p2=h.precipitation_probability?h.precipitation_probability[i]:null;
     hh+='<div class="hitem"><div class="ht">'+(i===i0?'现在':hr+'时')+'</div>'
       +'<div class="hp">'+(p2!=null&&p2>=30?p2+'%':'')+'</div>'
-      +icon(k2,h.is_day?h.is_day[i]===1:day,26)
+      +icon(k2,h.is_day?h.is_day[i]===1:day,28)
       +'<div class="hv">'+Math.round(h.temperature_2m[i])+'°</div></div>';
   }
   $('hourly').innerHTML=hh;
@@ -533,27 +526,36 @@ function renderP2(){
   const h=lastFC.hourly;
   let i0=h.time.indexOf(c.time); if(i0<0)i0=0;
 
-  /* 体感 */
+  /* 体感 + 平均 */
   const feel=Math.round(c.apparent_temperature), act=Math.round(c.temperature_2m);
   $('feelVal').textContent=feel+'°';
   const fd=feel-act;
-  $('feelDesc').textContent = fd>=2 ? '体感温度更高。' : (fd<=-2 ? '体感温度更低。' : '与实际温度相近。');
+  $('feelDesc').textContent = fd>=2 ? '体感比实际温度更高。' : (fd<=-2 ? '体感比实际温度更低。' : '与实际温度相近。');
+  const tmax0=Math.round(d0.temperature_2m_max[0]);
+  let sm=0; for(let i=0;i<d0.time.length;i++) sm+=d0.temperature_2m_max[i];
+  const mean=Math.round(sm/d0.time.length);
+  const diff=tmax0-mean;
+  $('avgVal').textContent=(diff>=0?'+':'')+diff+'°';
+  $('avgDesc').textContent='今日最高 '+tmax0+'°，'+(diff>=0?'高于':'低于')+'10日均值 '+mean+'°';
 
   /* 风 */
   $('windVal').textContent=Math.round(c.wind_speed_10m)+' km/h';
   $('gustVal').textContent=Math.round(c.wind_gusts_10m||0)+' km/h';
   $('wdirVal').textContent=windCn(c.wind_direction_10m)+' '+Math.round(c.wind_direction_10m)+'°';
-  $('compass').innerHTML=compassSVG(c.wind_direction_10m,Math.round(c.wind_speed_10m),108);
+  $('compass').innerHTML=compassSVG(c.wind_direction_10m,Math.round(c.wind_speed_10m),116);
 
-  /* 紫外线 (白天用当前小时值, 夜间显示明日峰值提示) */
+  /* 紫外线 + 能见度 */
   const uvNow=(h.uv_index&&h.uv_index[i0]!=null)?h.uv_index[i0]:0;
   const uvMax=d0.uv_index_max?d0.uv_index_max[0]:uvNow;
   const uv=Math.round(uvNow*10)/10;
-  const [ulvl,ucol,udesc]=uvLevel(uv);
+  const [ulvl,ucol]=uvLevel(uv);
   $('uvVal').textContent=uv;
   $('uvLvl').textContent=ulvl; $('uvLvl').style.color=ucol;
   $('uvDot').style.left=Math.min(100,uv/11*100)+'%';
-  $('uvDesc').textContent=c.is_day? udesc : ('今日峰值 '+Math.round(uvMax)+'，夜间较弱。');
+  const visM=(h.visibility&&h.visibility[i0]!=null)?h.visibility[i0]:null;
+  const visKm=visM==null?null:Math.round(visM/100)/10;
+  $('visVal').innerHTML=(visKm==null?'--':visKm)+'<small>km</small>';
+  $('visDesc').textContent=visKm==null?'':visDesc(visKm);
 
   /* 日出日落弧线 */
   const sr=d0.sunrise[0], ss=d0.sunset[0];
@@ -561,25 +563,12 @@ function renderP2(){
   $('ssVal').textContent='日落 '+ss.slice(11);
   const now=new Date(), t0=new Date(sr), t1=new Date(ss);
   const frac=(now-t0)/Math.max(1,(t1-t0));
-  $('sunarc').innerHTML=sunArcSVG(frac,c.is_day===1&&frac>=0&&frac<=1,176);
+  $('sunarc').innerHTML=sunArcSVG(frac,c.is_day===1&&frac>=0&&frac<=1,190);
 
-  /* 湿度 / 露点 */
+  /* 湿度 + 降水 */
   $('humVal').innerHTML=c.relative_humidity_2m+'<small>%</small>';
   const dew=(h.dewpoint_2m&&h.dewpoint_2m[i0]!=null)?Math.round(h.dewpoint_2m[i0]):null;
-  $('dewVal').textContent='目前露点温度为 '+(dew==null?'--':dew+'°')+'。';
-
-  /* 气压 */
-  const hpa=c.pressure_msl;
-  $('pgauge').innerHTML=pressureSVG(hpa,116);
-  $('presDesc').textContent= hpa>=1022?'气压偏高，天气稳定。':(hpa<=1005?'气压偏低，易有天气变化。':'气压正常。');
-
-  /* 能见度 */
-  const visM=(h.visibility&&h.visibility[i0]!=null)?h.visibility[i0]:null;
-  const visKm=visM==null?null:Math.round(visM/100)/10;
-  $('visVal').innerHTML=(visKm==null?'--':visKm)+'<small>km</small>';
-  $('visDesc').textContent=visKm==null?'':visDesc(visKm);
-
-  /* 降水 */
+  $('dewVal').textContent='露点温度 '+(dew==null?'--':dew+'°');
   const sum0=d0.precipitation_sum?d0.precipitation_sum[0]:0;
   $('rainVal').innerHTML=(Math.round(sum0*10)/10)+'<small>毫米</small>';
   let rd='未来 10 天无明显降水。';
@@ -587,16 +576,16 @@ function renderP2(){
     const s=d0.precipitation_sum?d0.precipitation_sum[i]:0;
     if(s>=0.5){
       const dt=new Date(d0.time[i]+'T00:00:00');
-      rd='预计'+WD[dt.getDay()]+'会有 '+(Math.round(s*10)/10)+' 毫米。';
+      rd='预计'+WD[dt.getDay()]+'有 '+(Math.round(s*10)/10)+' 毫米。';
       break;
     }
   }
   $('rainDesc').textContent=rd;
-}
 
-/* ================= 渲染 P3 ================= */
-function renderP3(){
-  const d0=lastFC.daily;
+  /* 气压 */
+  const hpa=c.pressure_msl;
+  $('pgauge').innerHTML=pressureSVG(hpa,150);
+  $('presDesc').textContent= hpa>=1022?'气压偏高，天气稳定。':(hpa<=1005?'气压偏低，易有天气变化。':'气压正常。');
 
   /* 月相 */
   const mi=moonInfo(Date.now());
@@ -604,18 +593,7 @@ function renderP3(){
   $('moonIllum').textContent=mi.illum+'%';
   $('moonAge').textContent=(Math.round(mi.age*10)/10)+' 天';
   $('moonFull').textContent= mi.toFull<0.5?'就是今天':Math.round(mi.toFull)+' 天';
-  $('moonNew').textContent = mi.toNew<0.5 ?'就是今天':Math.round(mi.toNew)+' 天';
-  $('moonPic').innerHTML=moonSVG(mi.p,150);
-
-  /* 平均 (10 日预报内最高温均值) */
-  const tmax0=Math.round(d0.temperature_2m_max[0]);
-  let sm=0; for(let i=0;i<d0.time.length;i++) sm+=d0.temperature_2m_max[i];
-  const mean=Math.round(sm/d0.time.length);
-  const diff=tmax0-mean;
-  $('avgVal').textContent=(diff>=0?'+':'')+diff+'°';
-  $('avgDir').textContent=(diff>=0?'高于':'低于')+'10日均最高温';
-  $('avgToday').textContent=tmax0+'°';
-  $('avgMean').textContent=mean+'°';
+  $('moonPic').innerHTML=moonSVG(mi.p,104);
 
   /* AQI */
   if(lastAQ&&lastAQ.current){
@@ -630,7 +608,7 @@ function renderP3(){
 
 function render(){
   if(!lastFC) return;
-  renderP1(); renderP2(); renderP3();
+  renderP1(); renderP2();
 }
 
 /* ================= 状态提示 ================= */
@@ -644,7 +622,7 @@ function setStatus(ok){
 }
 
 /* ================= 翻页 (仅手动, 不自动切换) ================= */
-const NPAGES=3;
+const NPAGES=2;
 let page=0;
 function go(p){
   page=((p%NPAGES)+NPAGES)%NPAGES;
@@ -669,6 +647,8 @@ $('dots').addEventListener('click',e=>{
   const i=[...$('dots').children].indexOf(e.target);
   if(i>=0) go(i);
 });
+/* 支持 #p1/#p2 指定初始页 (调试用) */
+const _hp=location.hash.match(/^#p([12])$/); if(_hp) go(parseInt(_hp[1])-1);
 
 /* ================= 拉取 ================= */
 async function pull(){
