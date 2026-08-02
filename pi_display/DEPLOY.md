@@ -1,0 +1,40 @@
+# pi_display 天气显示屏
+
+树莓派5 外接微雪 1024x600 HDMI 触摸屏，Chromium kiosk 全屏显示 `weather.html`。
+
+## 文件
+
+- `weather.html` — 天气页面（Open-Meteo 预报 + 空气质量，客户端每 30 分钟拉取）
+- `wx_shot_v*.png` — 各版本效果截图（v3 为 Pi 实机 grim 截图）
+
+## 部署（PC → Pi）
+
+```bash
+scp weather.html pi@192.168.3.36:/home/pi/home_monitor/pi_display/weather.html
+```
+
+页面有 6 小时自动整页重载，平时改完 scp 上去最多 6 小时生效；
+立即生效需在 Pi 上重启 Chromium（或 `pkill chromium`，autostart 不自动拉起，
+手动重启命令见下）。
+
+## Pi 上的配置
+
+- 页面位置: `/home/pi/home_monitor/pi_display/weather.html`
+- 开机自启: `~/.config/labwc/autostart` → chromium --kiosk（labwc 会话，autologin pi）
+- 手动启动（ssh 中）:
+
+```bash
+export XDG_RUNTIME_DIR=/run/user/1000 WAYLAND_DISPLAY=wayland-0
+nohup chromium --kiosk --noerrdialogs --disable-infobars --no-first-run \
+  --disable-session-crashed-bubble --ozone-platform=wayland \
+  file:///home/pi/home_monitor/pi_display/weather.html >/tmp/chromium.log 2>&1 &
+```
+
+- 屏幕截图验证: `grim /tmp/shot.png`（同上的环境变量）
+- 无 DPMS 熄屏配置，屏幕常亮；页面自身带 Wake Lock 兜底
+
+## 数据源
+
+- 预报: api.open-meteo.com（WMO 天气码 → 中文 + SVG 图标）
+- 空气: air-quality-api.open-meteo.com（PM2.5/PM10 按 HJ 633-2012 国标折点算 CN AQI）
+- Pi 直连两个 API 均可达（2026-08-02 实测 HTTP 200）
