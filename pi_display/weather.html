@@ -213,7 +213,7 @@ body.day .card{background:rgba(8,30,66,.32)}
       <div class="card dcard">
         <div class="ctitle"><svg width="13" height="13" viewBox="0 0 24 24"><path d="M4 15a8 8 0 1 1 16 0" fill="none" stroke="rgba(235,240,255,.55)" stroke-width="1.8"/><path d="M12 15l4-5" stroke="rgba(235,240,255,.55)" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="15" r="1.6" fill="rgba(235,240,255,.55)"/></svg>气压</div>
         <div id="pgauge" style="text-align:center;margin:auto 0"></div>
-        <div class="desc" style="margin-top:0;text-align:center" id="presDesc">--</div>
+        <div class="desc" style="margin-top:0;text-align:center;font-size:11px" id="presDesc">--</div>
       </div>
       <div class="card dcard">
         <div class="ctitle"><svg width="13" height="13" viewBox="0 0 24 24"><path d="M12 3s5.5 6 5.5 10a5.5 5.5 0 1 1-11 0C6.5 9 12 3 12 3z" fill="rgba(235,240,255,.55)"/></svg>降水</div>
@@ -553,7 +553,7 @@ function renderP2(){
   $('windVal').textContent=Math.round(c.wind_speed_10m)+' km/h';
   $('gustVal').textContent=Math.round(c.wind_gusts_10m||0)+' km/h';
   $('wdirVal').textContent=windCn(c.wind_direction_10m)+' '+Math.round(c.wind_direction_10m)+'°';
-  $('compass').innerHTML=compassSVG(c.wind_direction_10m,Math.round(c.wind_speed_10m),122);
+  $('compass').innerHTML=compassSVG(c.wind_direction_10m,Math.round(c.wind_speed_10m),136);
 
   /* 紫外线 */
   const uvNow=(h.uv_index&&h.uv_index[i0]!=null)?h.uv_index[i0]:0;
@@ -579,7 +579,7 @@ function renderP2(){
   $('moonIllum').textContent=mi.illum+'%';
   $('moonAge').textContent=(Math.round(mi.age*10)/10)+' 天';
   $('moonFull').textContent= mi.toFull<0.5?'就是今天':Math.round(mi.toFull)+' 天';
-  $('moonPic').innerHTML=moonSVG(mi.p,118);
+  $('moonPic').innerHTML=moonSVG(mi.p,136);
 
   /* 湿度 */
   $('humVal').innerHTML=c.relative_humidity_2m+'<small>%</small>';
@@ -588,7 +588,7 @@ function renderP2(){
 
   /* 气压 */
   const hpa=c.pressure_msl;
-  $('pgauge').innerHTML=pressureSVG(hpa,108);
+  $('pgauge').innerHTML=pressureSVG(hpa,126);
   $('presDesc').textContent= hpa>=1022?'气压偏高，天气稳定。':(hpa<=1005?'气压偏低，易有天气变化。':'气压正常。');
 
   /* 降水 */
