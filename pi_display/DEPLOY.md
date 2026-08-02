@@ -25,11 +25,14 @@ scp weather.html pi@192.168.3.36:/home/pi/home_monitor/pi_display/weather.html
 
 ```bash
 export XDG_RUNTIME_DIR=/run/user/1000 WAYLAND_DISPLAY=wayland-0
-nohup chromium --kiosk --noerrdialogs --disable-infobars --no-first-run \
+nohup chromium --kiosk --disable-pinch --noerrdialogs --disable-infobars --no-first-run \
   --disable-session-crashed-bubble --ozone-platform=wayland \
   file:///home/pi/home_monitor/pi_display/weather.html >/tmp/chromium.log 2>&1 &
 ```
 
+- `--disable-pinch`: 禁止触屏双指缩放（2026-08-02 发现误触会把页面缩小）
+- 截图调试另一页: 用 `--user-data-dir=/tmp/chr_p2` 隔离 + URL 加 `#p2`
+  （chromium 单例模式会忽略第二次启动的参数和 URL）
 - 屏幕截图验证: `grim /tmp/shot.png`（同上的环境变量）
 - 无 DPMS 熄屏配置，屏幕常亮；页面自身带 Wake Lock 兜底
 
