@@ -3,6 +3,38 @@
 ================================================================
 
 
+2026-08-02  工作区清理 + git 初始化 + 天气显示屏上线 (pi_display)
+
+  [工作区清理]
+  - 永久删除 D:\Work 根目录 45 个一次性补丁脚本 (fix_*/mod_*/add_*/check_*/test_*)
+    及 .vs 缓存; 脚本效果早已生效在设备上, 本地仅历史痕迹
+  - 删除 home_monitor/ 下 22 个 fix_*.py, 5 个 patch_*.py, 35 个 tmp_* 调试脚本,
+    dashboard.py 的 7 个 .bak 历史版本 (v5.1~v7.1), 共约 110 个文件
+  - 版本历史今后由 git 承担, 不再手动留 .bak
+
+  [git 初始化]
+  - home_monitor/ 初始化为 git 仓库, 首次提交 23 个核心文件
+  - .gitignore: __pycache__/*.bak/.log 等; .gitattributes: 强制 LF 行尾
+    (文件需 scp 到 Linux 设备运行, 避免 CRLF)
+  - 仓库局部身份 Administrator <admin@localhost>
+
+  [天气显示屏 weather.html 改版 - iOS 风格横屏]
+  - 左栏居中 hero: 大字号城市名/当前温度/天气状况/高低温
+  - 新增天气摘要句 (今日将持续X, 阵风最高Y km/h), current 增加 wind_gusts_10m
+  - 7日预报扩展为 10 日 (forecast_days=10), 来源说明并入标题行
+  - 修复 10 行日报表溢出卡片 (.drow padding 2px->1px, 删除独立 #foot 行)
+
+  [部署到树莓派 1024x600 触摸屏]
+  - 本机 (Traryia) 原 SSH 密钥丢失, 用密码安装新 ed25519 公钥到 pi@192.168.3.36,
+    之后免密; 密码未落盘保存
+  - 显示环境: HDMI-A-1 微雪 1024x600 触摸屏, labwc + lightdm autologin pi,
+    Chromium 150, Open-Meteo 直连可达 (HTTP 200, 无需代理)
+  - weather.html -> /home/pi/home_monitor/pi_display/weather.html
+  - ~/.config/labwc/autostart: chromium --kiosk 开机全屏
+  - 实机 grim 截图验证 (pi_display/wx_shot_v3_pi.png), 布局无溢出
+  - 无 DPMS 熄屏配置, 屏幕常亮; 页面自带 Wake Lock
+  - 部署/重启/截图命令见 pi_display/DEPLOY.md
+
 
 2026-07-22  Dashboard v5.4 - SQL GROUP BY Alias Conflict Fix
 
