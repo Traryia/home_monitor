@@ -25,14 +25,21 @@ scp weather.html pi@192.168.3.36:/home/pi/home_monitor/pi_display/weather.html
 
 ```bash
 export XDG_RUNTIME_DIR=/run/user/1000 WAYLAND_DISPLAY=wayland-0
-nohup chromium --kiosk --disable-pinch --noerrdialogs --disable-infobars --no-first-run \
+nohup chromium --user-data-dir=/home/pi/.config/chromium-kiosk --kiosk --disable-pinch \
+  --force-device-scale-factor=1 --noerrdialogs --disable-infobars --no-first-run \
   --disable-session-crashed-bubble --ozone-platform=wayland \
   file:///home/pi/home_monitor/pi_display/weather.html >/tmp/chromium.log 2>&1 &
 ```
 
-- `--disable-pinch`: 禁止触屏双指缩放（2026-08-02 发现误触会把页面缩小）
-- 截图调试另一页: 用 `--user-data-dir=/tmp/chr_p2` 隔离 + URL 加 `#p2`
-  （chromium 单例模式会忽略第二次启动的参数和 URL）
+- `--user-data-dir=~/.config/chromium-kiosk`: kiosk 专用 profile。2026-08-02 发现
+  默认 profile 的 Local State 固化了 device_scale_factor 0.75（浏览过别的网站所致），
+  页面所有 px 内容渲染为 75%（"字体变小"）；专用干净 profile 根治且与桌面浏览隔离
+- `--force-device-scale-factor=1`: 保险，防止 DPR 漂移
+- `--disable-pinch`: 禁止触屏双指缩放
+- 截图调试另一页: URL 加 `#p2`（页内需 go(1)），或临时 `--remote-debugging-port=9222`
+  + `ssh -L 9222:127.0.0.1:9222` 后用 CDP Runtime.evaluate 查 innerWidth/devicePixelRatio
+  （websocket 客户端需 suppress_origin）
+- 注意: chromium 单例模式会忽略第二次启动的参数和 URL，调试多开需 --user-data-dir 隔离
 - 屏幕截图验证: `grim /tmp/shot.png`（同上的环境变量）
 - 无 DPMS 熄屏配置，屏幕常亮；页面自身带 Wake Lock 兜底
 
