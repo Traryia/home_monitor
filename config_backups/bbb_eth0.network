@@ -1,0 +1,10 @@
+[Match]
+Name=eth0
+Type=ether
+
+[Link]
+RequiredForOnline=no
+
+[Network]
+Address=192.168.10.2/30
+DHCP=no

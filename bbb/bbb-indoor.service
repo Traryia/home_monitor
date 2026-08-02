@@ -1,0 +1,14 @@
+[Unit]
+Description=BBB Indoor Sensor Node
+After=network.target
+
+[Service]
+Type=simple
+User=debian
+WorkingDirectory=/home/debian
+ExecStart=/usr/bin/python3 /home/debian/indoor_sensor.py
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

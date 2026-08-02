@@ -1,0 +1,145 @@
+﻿================================================================
+  home_monitor 项目 - 设备拓扑与连接指南
+================================================================
+
+日期: 2026-07-21
+
+----------------------------------------------------------------
+  网络拓扑
+----------------------------------------------------------------
+
+ 本地PC (192.168.3.100, Windows)
+    │
+    └── WiFi ─── 路由器 (192.168.3.1)
+                    │
+         ┌──────────┼──────────┐
+         │          │          │
+    树莓派5      ESP32-S3
+   wlan0:        WiFi IP:
+   192.168.3.36  192.168.3.39
+         │                        (当前通过mpremote操作)
+         │ USB ───┐
+         │        │
+       eth1     /dev/ttyACM0 (BBB串口控制台)
+    192.168.7.1  │
+         │     /dev/ttyACM1 (ESP32 mpremote)
+      AM3358 BBB │
+      usb0:      │
+      192.168.7.2│
+      eth0:      │
+      192.168.   │
+    .10.2────────┘── 网线 ── Pi eth0: 192.168.10.1
+
+----------------------------------------------------------------
+  设备清单
+----------------------------------------------------------------
+
+[A] 树莓派 5
+  角色: 跳板机 / 数据网关
+  OS:   Debian (Linux 6.18.34+rpt-rpi-2712, aarch64)
+  网络:
+    wlan0: 192.168.3.36/24  (WiFi, 主通道)
+    eth0:  192.168.10.1/30  (网线直连 BBB)
+    eth1:  192.168.7.1/30   (USB gadget 连接 BBB)
+  SSH:  ssh pi5  (已配密钥, 用户 pi)
+  ESP32: /dev/ttyACM1 (mpremote)
+  BBB 串口: /dev/ttyACM0 (115200, 8N1)
+
+[B] AM3358 (BeagleBone Black)
+  角色: 主控 / 数据处理
+  OS:   Debian 13 Trixie (Kernel 5.10.168-ti-r84, armv7l)
+  用户: debian / 123456
+  网络:
+    usb0: 192.168.7.2/30  (USB gadget, 通 Pi eth1)
+    eth0: 192.168.10.2/30 (网线直连, 通 Pi eth0)
+  访问方式:
+    - SSH via USB:  ssh debian@192.168.7.2 (已配密钥, 免密)
+    - SSH via 网线: ssh debian@192.168.10.2
+    - 串口控制台:  /dev/ttyACM0 on Pi (115200)
+  网络管理: systemd-networkd
+    /etc/systemd/network/eth0.network  (静态 192.168.10.2/30)
+    /etc/systemd/network/usb0.network  (静态 192.168.7.2/30)
+
+[C] ESP32-S3 (微雪 Waveshare)
+  角色: 户外传感器节点 (5传感器)
+  芯片: ESP32-S3, 240MHz, 8MB PSRAM, 16MB Flash
+  WiFi: 192.168.3.39 (STA, SSID: HUAWEI-FI18J2)
+  连接: 直连PC USB COM5 (mpremote), 或通过 Pi USB /dev/ttyACM1
+  固件: main.py v3.0 (MQTT, 5传感器, 每10s上报)
+  传感器:
+    - BH1750 光照    (I2C: SDA=GPIO4, SCL=GPIO17,  addr 0x23, ADDR=LOW)
+    - BMP280 气压温度 (I2C: SDA=GPIO38, SCL=GPIO39, addr 0x76)
+    - SHT30  温湿度   (I2C: SDA=GPIO41, SCL=GPIO42, addr 0x44)
+    - ADS1115 ADC    (I2C: SDA=GPIO43, SCL=GPIO44, addr 0x48, A0+A1)
+  数据上报: MQTT home/sensors → Pi5 Mosquitto:1883 (每10秒)
+  备份固件: main.py.bak (MQTT旧版, BH1750 only)
+            main.py.bak2 (UDP旧版, BH1750 only)
+
+----------------------------------------------------------------
+  常用命令
+----------------------------------------------------------------
+
+  # 跳板机 (从本地 Windows)
+  ssh pi5
+
+  # BBB via USB
+  ssh pi5 "ssh debian@192.168.7.2"
+
+  # BBB via 网线
+  ssh pi5 "ssh debian@192.168.10.2"
+
+  # ESP32 操作
+  ssh pi5 "python3 -m mpremote connect /dev/ttyACM1 fs ls"
+  ssh pi5 "python3 -m mpremote connect /dev/ttyACM1 fs cat main.py"
+
+  # 查看 UDP 数据 (在 Pi 上)
+  nc -ul 9999
+
+----------------------------------------------------------------
+  已完成配置
+----------------------------------------------------------------
+
+  [x] Pi → BBB SSH 密钥认证 (免密)
+  [x] Pi eth0 ↔ BBB eth0 网线直连 (192.168.10.0/30)
+  [x] BBB eth0 静态IP持久化 (systemd-networkd)
+  [x] ESP32 固件读取与备份
+
+
+
+================================================================
+
+================================================================
+  Dashboard v7.0 - Web仪表盘 (2026-07-22)
+================================================================
+
+URL: http://192.168.3.36:5000
+
+三页结构:
+  / (Home)     - 光照/T/H/P/ADC卡片 + 6条24h time轴曲线 + 设备状态
+  /system      - Pi5/ESP32/BBB系统信息 + 5条24h time轴趋势图
+  /weather     - Open-Meteo ECMWF天气 + 24h温度曲线 + 5天预报
+
+API端点:
+  GET /ping                  - 连通性测试
+  GET /api/current           - 所有设备最新数据和在线状态
+  GET /api/history           - ESP32光照24h历史(5分钟聚合)
+  GET /api/sensor_history?field=<name> - 通用传感器24h历史(temp/hum/pres/rssi/adc etc)
+  GET /api/pi_metrics        - Pi系统指标24h历史
+  GET /api/esp_rssi          - ESP32 WiFi RSSI 24h历史 (500错误待修复)
+  GET /api/bbb_cpu           - BBB CPU占用率 24h历史 (500错误待修复)
+
+数据流:
+  ESP32 --(WiFi/MQTT:10s)--> Mosquitto:1883 --> mqtt_collector.py v3.1 --> SQLite (17列)
+  BBB   --(MQTT:10s)-------> Mosquitto:1883 --> mqtt_collector.py --> SQLite
+  Pi5   --(内部proc/sys:10s)--> mqtt_collector.py --> SQLite
+  Flask dashboard.py v7.0 --> SQLite --> HTML + ECharts(time轴,6曲线)
+
+数据库:
+  sensor_data: 24h历史, 5分钟聚合, GROUP BY ts
+  device_status: 设备在线状态, 45s超时判定离线
+
+备忘:
+  * Open-Meteo API 从Pi直连被GFW阻断, dashboard.service需代理
+  * PowerShell SSH引号转义: 复杂命令先scp脚本再远程执行
+  * SQL别名不与列名同名: 用ts代替timestamp
+  * 本地dashboard.py必须与Pi保持一致, scp确认方向

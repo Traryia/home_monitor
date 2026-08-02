@@ -1,0 +1,14 @@
+[Unit]
+Description=MQTT Sensor Data Collector
+After=network.target mosquitto.service
+
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/home/pi/home_monitor
+ExecStart=/usr/bin/python3 /home/pi/home_monitor/mqtt_collector.py
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

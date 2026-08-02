@@ -1,0 +1,79 @@
+﻿================================================================
+  VERSIONS.txt — home_monitor 项目文件清单
+================================================================
+
+日期: 2026-07-21  状态: P0+P1 完成, AM3358 骨架就绪
+
+--- 项目文档 ---
+README.txt         v1.0  项目概述、设备拓扑、连接指南、常用命令
+ARCHITECTURE.md    v1.0  系统架构图、需求分析、技术选型、下一步计划
+PINMAP.md          v1.0  三块板子的完整引脚定义、实际接线记录
+VERSIONS.txt       v1.0  本文件
+CHANGELOG.md       v1.0  按时间线的变更记录
+
+--- Pi5 代码 (中枢) ---
+dashboard.py              v5.7  Flask Web, ???????, ORDER BY????, 8????, Local Time
+mqtt_collector.py         v1.0  MQTT→SQLite 收集器
+pi5/dashboard.service     v1.0  systemd 服务 (开机自启)
+pi5/mqtt-collector.service v1.0  systemd 服务 (开机自启)
+
+--- ESP32 代码 (户外节点) ---
+esp32/main.py             v10   当前固件: BH1750 + WS2812 + MQTT
+  ESP32文件: main.py                 (/dev/ttyACM1)
+  备份: main.py.udp.bak  (UDP版本)
+        main.py.bak       (旧MQTT版本, broker=192.168.3.37)
+
+--- AM3358 代码 (室内节点) ---
+bbb/indoor_sensor.py     v1.0  骨架脚本 (MQTT发布, 传感器占位)
+bbb/bbb-indoor.service   v1.0  systemd 服务 (开机自启)
+
+--- 配置文件备份 ---
+config_backups/pi5_mosquitto.conf    Pi5 Mosquitto (listener 1883, 匿名)
+config_backups/bbb_eth0.network      AM3358 网线直连 (192.168.10.2/30)
+config_backups/bbb_usb0.network      AM3358 USB gadget (192.168.7.2/30)
+
+--- 关键配置参数 ---
+WiFi SSID:       HUAWEI-FI18J2 / 199908130922
+MQTT Broker:     192.168.3.36:1883 (Pi5, 匿名访问)
+BH1750 I2C:      IO43=SDA, IO44=SCL (ESP32, 实际接线★非标准位置)
+BBB SSH:         192.168.7.2 (USB) / 192.168.10.2 (网线)
+                  用户: debian / 123456
+Dashboard URL:   http://192.168.3.36:5000
+Pi5 SSH:         用户 pi, SSH config 别名 pi5
+
+--- 引用资料 ---
+D:\Work\开发板资料\ESP32\README_PINMAP.txt    ESP32 详细引脚说明
+D:\Work\开发板资料\ESP32\PINMAP Reference.xlsx  ESP32 引脚参考
+D:\Work\开发板资料\AM3358\BBB_Pinout_AM3358.xlsx AM3358 引脚参考
+  esp32-sensor MQTT原始代码路径: D:\Work\开发板资料\ESP32\..? (见esp32/main.py.bak)
+
+--- 2026-07-21 最终状态 (Dashboard v4) ---
+dashboard.py              v4.0  服务端渲染卡片 + ECharts图表(本地JS)
+  备份: dashboard.py.bak  (v2.1, 损坏的JS版)
+        dashboard.py.v2.bak (v2.0, 中间版)
+        dashboard.py.v3.bak (v3.0, 纯服务端渲染)
+mqtt_collector.py         v2.1  topic分流(sensors->sensor_data, status->device_status)
+static/echarts.min.js     1.0M  从npmmirror下载的ECharts 5.5.0
+
+新增API端点:
+  GET /ping           返回"pong" (连通性测试)
+  GET /api/current    返回最新传感器数据+设备状态(JSON)
+  GET /api/history?limit=N  返回最近N条光照历史(JSON)
+
+Dashboard访问: http://192.168.3.36:5000/
+  支持浏览器: 所有浏览器(服务端渲染)
+  ECharts图表: 需浏览器支持JS(降级无图表但卡片正常)
+
+--- 2026-07-22 Database Snapshot ---
+sensor_data records:
+  esp32-outdoor: 9196 (BH1750 light, 10s interval since 2026-07-21 20:16)
+  bbb-indoor:    9016 (CPU usage, 10s interval since 2026-07-21 20:28)
+  pi-system:     2496 (CPU temp/usage/memory/disk, 10s since 2026-07-22 00:38)
+device_status records: esp32-outdoor, bbb-indoor, pi-system
+DB path: /home/pi/home_monitor/sensors.db (5.5MB)
+
+2026-07-22 | ESP32 main.py    | v3.0 | 5-sensor MQTT firmware (BH1750+BMP280+SHT30+ADS1115)
+2026-07-22 | mqtt_collector.py| v3.1 | 17-column insert, auto-upsert status on sensor msg
+2026-07-22 | dashboard.py     | v7.0 | 6 time-axis charts, T/H/P/ADC on Home, System time axis
+2026-07-22 | tmp_all_final.py | v1.0 | Local test script for all 5 sensors (no WiFi/MQTT)
+2026-07-22 | tmp_scan_all.py  | v1.0 | 4-bus I2C scanner
