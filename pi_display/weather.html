@@ -19,7 +19,7 @@ body.day{background:linear-gradient(180deg,#2e6ab8 0%,#4f8fd4 55%,#7db4e6 100%)}
 @keyframes tw{0%,100%{opacity:.15}50%{opacity:.85}}
 .cloud{position:fixed;border-radius:50%;background:rgba(255,255,255,.07);filter:blur(28px);pointer-events:none;z-index:0}
 /* ---------- pager ---------- */
-#pager{display:flex;width:200vw;height:100vh;position:relative;z-index:1;
+#pager{display:flex;width:300vw;height:100vh;position:relative;z-index:1;
   transition:transform .45s ease}
 .page{width:100vw;height:100vh;padding:14px;flex:none;overflow:hidden}
 #dots{position:fixed;bottom:8px;left:50%;transform:translateX(-50%);z-index:5;
@@ -72,36 +72,38 @@ body.day .card{background:rgba(8,30,66,.32)}
 .dnow{position:absolute;top:50%;width:8px;height:8px;border-radius:50%;background:#fff;
   border:1.5px solid rgba(0,0,0,.3);transform:translate(-50%,-50%)}
 #foot{margin-left:auto;font-weight:400;font-size:10px;color:rgba(235,240,255,.35)}
-/* ---------- page 2: detail grid 6x2 ---------- */
-#grid2{display:grid;grid-template-columns:repeat(6,1fr);grid-template-rows:1fr 1fr;gap:12px;height:100%}
-.dcard{display:flex;flex-direction:column;min-height:0;min-width:0}
-.dcard .big{font-size:32px;font-weight:300;line-height:1.15}
-.dcard .big small{font-size:15px;font-weight:400;color:rgba(235,240,255,.75)}
-.dcard .sub{font-size:12.5px;font-weight:600;margin-top:1px}
-.dcard .desc{font-size:11.5px;color:rgba(235,240,255,.62);margin-top:auto;line-height:1.45}
-.wrows{display:flex;flex-direction:column;font-size:12px}
-.wrows .wr{display:flex;justify-content:space-between;border-top:1px solid rgba(255,255,255,.08);padding:3.5px 0}
+/* ---------- page 2: detail grid ---------- */
+#grid2{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:1fr 1fr;gap:12px;height:100%}
+.dcard{display:flex;flex-direction:column;min-height:0}
+.dcard .big{font-size:44px;font-weight:300;line-height:1.1}
+.dcard .big small{font-size:20px;font-weight:400;color:rgba(235,240,255,.75)}
+.dcard .sub{font-size:13px;font-weight:600;margin-top:1px}
+.dcard .desc{font-size:12px;color:rgba(235,240,255,.62);margin-top:auto;line-height:1.45}
+.wrows{display:flex;flex-direction:column;font-size:13.5px}
+.wrows .wr{display:flex;justify-content:space-between;border-top:1px solid rgba(255,255,255,.08);padding:4.5px 0}
 .wrows .wr:first-child{border-top:none}
 .wrows .wr b{font-weight:600}
 .wrows .wr span{color:rgba(235,240,255,.62)}
 .gbar{position:relative;height:5px;border-radius:3px;margin:9px 0 7px}
 .gdot{position:absolute;top:50%;width:9px;height:9px;border-radius:50%;background:#fff;
   border:2px solid rgba(0,0,0,.35);transform:translate(-50%,-50%)}
-#moonCard{grid-column:span 2;display:flex;align-items:center;gap:12px}
-#moonCard .mrows{flex:1;display:flex;flex-direction:column;font-size:12.5px;min-width:0}
-#moonCard .mrows .wr{display:flex;justify-content:space-between;border-top:1px solid rgba(255,255,255,.08);padding:4.5px 0}
+/* ---------- page 3 ---------- */
+#grid3{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1.05fr 1fr;gap:12px;height:100%}
+#moonCard{grid-column:1/3;display:flex;align-items:center;gap:18px}
+#moonCard .mrows{flex:1;display:flex;flex-direction:column;font-size:14px}
+#moonCard .mrows .wr{display:flex;justify-content:space-between;border-top:1px solid rgba(255,255,255,.08);padding:6px 0}
 #moonCard .mrows .wr:first-child{border-top:none}
-#moonCard .mrows .wr b{font-weight:600;white-space:nowrap}
+#moonCard .mrows .wr b{font-weight:600}
 #moonCard .mrows .wr span{color:rgba(235,240,255,.62)}
-#moonName{font-size:17px;font-weight:700;margin-bottom:3px}
-#aqi .row{display:flex;align-items:baseline;gap:7px}
-#aqiVal{font-size:32px;font-weight:300}
-#aqiLvl{font-size:14px;font-weight:600}
-#aqiBar{position:relative;height:5px;border-radius:3px;margin:9px 0 7px;
+#moonName{font-size:20px;font-weight:700;margin-bottom:4px}
+#aqi .row{display:flex;align-items:baseline;gap:8px}
+#aqiVal{font-size:40px;font-weight:300}
+#aqiLvl{font-size:16px;font-weight:600}
+#aqiBar{position:relative;height:5px;border-radius:3px;margin:10px 0 8px;
   background:linear-gradient(90deg,#4cd964 0%,#a3e048 17%,#ffcc00 33%,#ff9f43 50%,#ff5e3a 67%,#b04ad8 84%,#8b1e3f 100%)}
 #aqiDot{position:absolute;top:50%;width:9px;height:9px;border-radius:50%;background:#fff;
   border:2px solid rgba(0,0,0,.35);transform:translate(-50%,-50%)}
-#aqiTxt{font-size:11px;color:rgba(235,240,255,.62);margin-top:auto;line-height:1.45}
+#aqiTxt{font-size:12px;color:rgba(235,240,255,.62);margin-top:auto}
 </style>
 </head>
 <body>
@@ -153,12 +155,14 @@ body.day .card{background:rgba(8,30,66,.32)}
       </div>
       <div class="card dcard">
         <div class="ctitle">风</div>
-        <div class="wrows">
-          <div class="wr"><span>风</span><b id="windVal">--</b></div>
-          <div class="wr"><span>阵风</span><b id="gustVal">--</b></div>
-          <div class="wr"><span>方向</span><b id="wdirVal">--</b></div>
+        <div style="display:flex;gap:6px;flex:1;min-height:0">
+          <div class="wrows" style="flex:1">
+            <div class="wr"><span>风</span><b id="windVal">--</b></div>
+            <div class="wr"><span>阵风</span><b id="gustVal">--</b></div>
+            <div class="wr"><span>方向</span><b id="wdirVal">--</b></div>
+          </div>
+          <div id="compass" style="flex:none;align-self:center"></div>
         </div>
-        <div id="compass" style="text-align:center;margin-top:auto"></div>
       </div>
       <div class="card dcard">
         <div class="ctitle">紫外线指数</div>
@@ -196,6 +200,12 @@ body.day .card{background:rgba(8,30,66,.32)}
         <div class="sub">今天</div>
         <div class="desc" id="rainDesc">--</div>
       </div>
+    </div>
+  </section>
+
+  <!-- ============ P3 月相 / 平均 / AQI ============ -->
+  <section class="page">
+    <div id="grid3">
       <div class="card" id="moonCard">
         <div class="mrows">
           <div id="moonName">--</div>
@@ -210,7 +220,7 @@ body.day .card{background:rgba(8,30,66,.32)}
         <div class="ctitle">平均</div>
         <div class="big" id="avgVal">--</div>
         <div class="sub" id="avgDir">--</div>
-        <div class="wrows" style="margin-top:6px">
+        <div class="wrows" style="margin-top:8px">
           <div class="wr"><span>今天最高</span><b id="avgToday">--</b></div>
           <div class="wr"><span>10日平均最高</span><b id="avgMean">--</b></div>
         </div>
@@ -224,7 +234,7 @@ body.day .card{background:rgba(8,30,66,.32)}
     </div>
   </section>
 </div>
-<div id="dots"><span class="on"></span><span></span></div>
+<div id="dots"><span class="on"></span><span></span><span></span></div>
 
 <script>
 'use strict';
@@ -234,7 +244,6 @@ const CFG = {
   refreshMs: 30*60*1000,      // 天气刷新周期
   retryMs:   2*60*1000,       // 失败重试
   reloadMs:  6*3600*1000,     // 整页重载防内存累积
-  autoMs:    18*1000,         // 自动翻页周期
 };
 const FC_URL = 'https://api.open-meteo.com/v1/forecast?latitude='+CFG.lat+'&longitude='+CFG.lon
   + '&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,weather_code,wind_speed_10m,wind_gusts_10m,wind_direction_10m,pressure_msl'
@@ -534,7 +543,7 @@ function renderP2(){
   $('windVal').textContent=Math.round(c.wind_speed_10m)+' km/h';
   $('gustVal').textContent=Math.round(c.wind_gusts_10m||0)+' km/h';
   $('wdirVal').textContent=windCn(c.wind_direction_10m)+' '+Math.round(c.wind_direction_10m)+'°';
-  $('compass').innerHTML=compassSVG(c.wind_direction_10m,Math.round(c.wind_speed_10m),92);
+  $('compass').innerHTML=compassSVG(c.wind_direction_10m,Math.round(c.wind_speed_10m),108);
 
   /* 紫外线 (白天用当前小时值, 夜间显示明日峰值提示) */
   const uvNow=(h.uv_index&&h.uv_index[i0]!=null)?h.uv_index[i0]:0;
@@ -552,7 +561,7 @@ function renderP2(){
   $('ssVal').textContent='日落 '+ss.slice(11);
   const now=new Date(), t0=new Date(sr), t1=new Date(ss);
   const frac=(now-t0)/Math.max(1,(t1-t0));
-  $('sunarc').innerHTML=sunArcSVG(frac,c.is_day===1&&frac>=0&&frac<=1,124);
+  $('sunarc').innerHTML=sunArcSVG(frac,c.is_day===1&&frac>=0&&frac<=1,176);
 
   /* 湿度 / 露点 */
   $('humVal').innerHTML=c.relative_humidity_2m+'<small>%</small>';
@@ -561,7 +570,7 @@ function renderP2(){
 
   /* 气压 */
   const hpa=c.pressure_msl;
-  $('pgauge').innerHTML=pressureSVG(hpa,108);
+  $('pgauge').innerHTML=pressureSVG(hpa,116);
   $('presDesc').textContent= hpa>=1022?'气压偏高，天气稳定。':(hpa<=1005?'气压偏低，易有天气变化。':'气压正常。');
 
   /* 能见度 */
@@ -596,7 +605,7 @@ function renderP3(){
   $('moonAge').textContent=(Math.round(mi.age*10)/10)+' 天';
   $('moonFull').textContent= mi.toFull<0.5?'就是今天':Math.round(mi.toFull)+' 天';
   $('moonNew').textContent = mi.toNew<0.5 ?'就是今天':Math.round(mi.toNew)+' 天';
-  $('moonPic').innerHTML=moonSVG(mi.p,132);
+  $('moonPic').innerHTML=moonSVG(mi.p,150);
 
   /* 平均 (10 日预报内最高温均值) */
   const tmax0=Math.round(d0.temperature_2m_max[0]);
@@ -634,37 +643,32 @@ function setStatus(ok){
   }
 }
 
-/* ================= 翻页 ================= */
-const NPAGES=2;
-let page=0, _at=null;
+/* ================= 翻页 (仅手动, 不自动切换) ================= */
+const NPAGES=3;
+let page=0;
 function go(p){
   page=((p%NPAGES)+NPAGES)%NPAGES;
   $('pager').style.transform='translateX('+(-page*100)+'vw)';
   const ds=$('dots').children;
   for(let i=0;i<ds.length;i++) ds[i].className=i===page?'on':'';
 }
-function scheduleAuto(){
-  clearTimeout(_at);
-  _at=setTimeout(()=>{ go(page+1); scheduleAuto(); }, CFG.autoMs);
-}
 let _tx=null;
 document.addEventListener('touchstart',e=>{ _tx=e.touches[0].clientX; },{passive:true});
 document.addEventListener('touchend',e=>{
   if(_tx==null) return;
   const dx=e.changedTouches[0].clientX-_tx; _tx=null;
-  if(Math.abs(dx)>50){ go(page+(dx<0?1:-1)); scheduleAuto(); }
+  if(Math.abs(dx)>50) go(page+(dx<0?1:-1));
 },{passive:true});
 document.addEventListener('mousedown',e=>{ _tx=e.clientX; });
 document.addEventListener('mouseup',e=>{
   if(_tx==null) return;
   const dx=e.clientX-_tx; _tx=null;
-  if(Math.abs(dx)>50){ go(page+(dx<0?1:-1)); scheduleAuto(); }
+  if(Math.abs(dx)>50) go(page+(dx<0?1:-1));
 });
 $('dots').addEventListener('click',e=>{
   const i=[...$('dots').children].indexOf(e.target);
-  if(i>=0){ go(i); scheduleAuto(); }
+  if(i>=0) go(i);
 });
-scheduleAuto();
 
 /* ================= 拉取 ================= */
 async function pull(){
