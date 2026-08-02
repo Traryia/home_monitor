@@ -77,3 +77,12 @@ DB path: /home/pi/home_monitor/sensors.db (5.5MB)
 2026-07-22 | dashboard.py     | v7.0 | 6 time-axis charts, T/H/P/ADC on Home, System time axis
 2026-07-22 | tmp_all_final.py | v1.0 | Local test script for all 5 sensors (no WiFi/MQTT)
 2026-07-22 | tmp_scan_all.py  | v1.0 | 4-bus I2C scanner
+
+--- 2026-08-02 pi_display 天气显示屏 (详见 CHANGELOG 当日条目) ---
+2026-08-02 | weather.html        | v6.2 | 两页触控天气屏: iOS粗体大卡, 4x3详情, DPR修复
+2026-08-02 | pi_display/DEPLOY.md| v1.1 | 部署/唤出/退出/截图/CDP诊断手册
+2026-08-02 | labwc autostart     | v1.1 | chromium kiosk 自启 (专用profile+锁定DPR+禁pinch)
+2026-08-02 | Desktop/天气显示.desktop | v1.1 | 双击唤出天气屏 (同 kiosk 参数)
+
+注: 2026-08-02 起 home_monitor/ 已纳入 git 版本控制, 详细变更以
+    git log 与 CHANGELOG.md 为准, 本文件只做里程碑索引。

@@ -143,3 +143,47 @@ API端点:
   * PowerShell SSH引号转义: 复杂命令先scp脚本再远程执行
   * SQL别名不与列名同名: 用ts代替timestamp
   * 本地dashboard.py必须与Pi保持一致, scp确认方向
+
+
+================================================================
+  pi_display 天气显示屏 (2026-08-02 上线)
+================================================================
+
+硬件: 微雪 1024x600 HDMI 触摸屏 (HDMI-A-1, 触控已映射 labwc rc.xml)
+系统: labwc + lightdm autologin pi, Chromium kiosk
+
+页面: pi_display/weather.html  两页, 手动滑动/圆点切换 (无自动轮播)
+  P1 概览: 时钟/城市/大温度/天气摘要/AQI/高温降雨提醒 + 12h逐时 + 10日预报
+  P2 详情 (4列x3行): 平均 | 体感 | 风(左数据+右罗盘, 占2格)
+                     紫外线 | 日出(弧线) | 月相(左数据+右月图, 占2格)
+                     湿度 | 气压(表盘) | 降水 | 能见度
+数据: Open-Meteo 预报+空气质量 API (Pi 直连可达), 30分钟刷新, 失败显示缓存
+      月相为本地天文算法; AQI 按 HJ 633-2012 国标由 PM2.5/PM10 估算
+主题: 白天/夜晚自动切换, 夜间星空背景
+
+Pi 上的位置:  /home/pi/home_monitor/pi_display/weather.html
+开机自启:     ~/.config/labwc/autostart
+桌面图标:     ~/Desktop/天气显示.desktop  (双击唤出)
+临时退出:     Alt+F4  或  ssh pi@192.168.3.36 "pkill chromium"
+永久关自启:   注释 autostart 里的 chromium 行
+
+Chromium 启动参数 (v6.2 踩坑后定稿, 缺一不可):
+  --user-data-dir=/home/pi/.config/chromium-kiosk
+      专用 profile! 默认 profile 的 Local State 固化了 device_scale_factor
+      0.75, 曾导致全页渲染成 75% ("字体变小"), 专用干净 profile 根治
+  --force-device-scale-factor=1     防止 DPR 漂移
+  --disable-pinch                   禁止触屏双指缩放
+  --kiosk --noerrdialogs --disable-infobars --no-first-run
+  --disable-session-crashed-bubble --ozone-platform=wayland
+
+运维手册: pi_display/DEPLOY.md
+  (scp 更新页面 / grim 远程截图 / #p2 调试页 / CDP 远程量 innerWidth,DPR)
+
+----------------------------------------------------------------
+  2026-08-02 工作区变更
+----------------------------------------------------------------
+  [x] D:\Work 清理: 删除约110个一次性补丁脚本和 dashboard .bak 备份
+  [x] home_monitor/ 初始化 git 仓库 (版本历史今后由 git 承担)
+  [x] Traryia 本机 ed25519 密钥直连 pi@192.168.3.36
+      (README 旧述 "ssh pi5 别名" 的配置已不存在, 直接用 IP)
+  [x] 天气显示屏 v6.2 上线 (设计迭代见 CHANGELOG 2026-08-02 各条目)
