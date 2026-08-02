@@ -21,14 +21,17 @@ body.day{background:linear-gradient(180deg,#2e6ab8 0%,#4f8fd4 55%,#7db4e6 100%)}
 #app{position:relative;z-index:1;display:grid;grid-template-columns:336px 1fr;gap:12px;height:100vh;padding:14px}
 /* ---------- left column ---------- */
 #left{display:flex;flex-direction:column;gap:6px;min-height:0}
-#clock{font-size:42px;font-weight:600;line-height:1;letter-spacing:0}
-#date{font-size:15px;color:rgba(235,240,255,.65);margin-top:2px}
-#loc{display:flex;align-items:center;gap:6px;font-size:20px;font-weight:600;margin-top:8px}
+#topbar{display:flex;align-items:baseline;gap:10px}
+#clock{font-size:30px;font-weight:600;line-height:1;letter-spacing:0}
+#date{font-size:13px;color:rgba(235,240,255,.65)}
+#hero{text-align:center;margin:4px 0 2px}
+#loc{display:flex;align-items:center;justify-content:center;gap:6px;font-size:23px;font-weight:600}
 #loc svg{flex:none}
-#curtemp{font-size:82px;font-weight:200;line-height:1.02;margin-left:-5px}
-#cond{font-size:18px;font-weight:500}
-#hl{font-size:15px;color:rgba(235,240,255,.85);margin-top:2px}
-#meta{font-size:13px;color:rgba(235,240,255,.62);margin-top:4px;line-height:1.6}
+#curtemp{font-size:88px;font-weight:200;line-height:1.05;margin-left:-4px}
+#cond{font-size:17px;font-weight:500}
+#hl{font-size:14px;color:rgba(235,240,255,.85);margin-top:3px}
+#summary{font-size:13px;color:rgba(235,240,255,.78);line-height:1.5;margin-top:4px}
+#meta{font-size:12.5px;color:rgba(235,240,255,.62);margin-top:4px;line-height:1.6;text-align:center}
 .card{background:rgba(13,24,48,.55);border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:10px 13px}
 body.day .card{background:rgba(8,30,66,.32)}
 .alert{display:flex;gap:10px;align-items:flex-start}
@@ -54,7 +57,7 @@ body.day .card{background:rgba(8,30,66,.32)}
 .hitem .hv{font-size:15.5px;font-weight:600}
 #daily{flex:1;display:flex;flex-direction:column;min-height:0}
 #dlist{flex:1;display:flex;flex-direction:column;justify-content:space-between}
-.drow{display:flex;align-items:center;gap:8px;border-top:1px solid rgba(255,255,255,.07);padding:2px 0}
+.drow{display:flex;align-items:center;gap:8px;border-top:1px solid rgba(255,255,255,.07);padding:1px 0}
 .drow:first-child{border-top:none}
 .dday{width:40px;font-size:14.5px;font-weight:600;flex:none}
 .dicon{width:56px;flex:none;display:flex;flex-direction:column;align-items:center}
@@ -65,7 +68,7 @@ body.day .card{background:rgba(8,30,66,.32)}
 .dseg{position:absolute;top:0;height:100%;border-radius:3px}
 .dnow{position:absolute;top:50%;width:8px;height:8px;border-radius:50%;background:#fff;
   border:1.5px solid rgba(0,0,0,.3);transform:translate(-50%,-50%)}
-#foot{font-size:10.5px;color:rgba(235,240,255,.35);text-align:right;margin-top:4px}
+#foot{margin-left:auto;font-weight:400;font-size:10px;color:rgba(235,240,255,.35)}
 </style>
 </head>
 <body>
@@ -75,14 +78,17 @@ body.day .card{background:rgba(8,30,66,.32)}
 <div class="cloud" style="width:380px;height:130px;bottom:-50px;left:38%"></div>
 <div id="app">
   <div id="left">
-    <div>
+    <div id="topbar">
       <div id="clock">--:--</div>
       <div id="date">----年--月--日</div>
     </div>
-    <div id="loc"></div>
-    <div id="curtemp">--°</div>
-    <div id="cond">获取中…</div>
-    <div id="hl"></div>
+    <div id="hero">
+      <div id="loc"></div>
+      <div id="curtemp">--°</div>
+      <div id="cond">获取中…</div>
+      <div id="hl"></div>
+    </div>
+    <div id="summary"></div>
     <div id="meta"></div>
     <div id="alerts"></div>
     <div id="aqi" class="card" style="display:none">
@@ -98,9 +104,8 @@ body.day .card{background:rgba(8,30,66,.32)}
       <div id="hourly"></div>
     </div>
     <div class="card" id="daily">
-      <div class="ctitle">7 日天气预报</div>
+      <div class="ctitle">10 日天气预报<span id="foot">数据来源 Open-Meteo · AQI 由 PM 浓度按国标估算</span></div>
       <div id="dlist"></div>
-      <div id="foot">数据来源 Open-Meteo · AQI 由 PM 浓度按国标估算</div>
     </div>
   </div>
 </div>
@@ -114,10 +119,10 @@ const CFG = {
   reloadMs:  6*3600*1000,     // 整页重载防内存累积
 };
 const FC_URL = 'https://api.open-meteo.com/v1/forecast?latitude='+CFG.lat+'&longitude='+CFG.lon
-  + '&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,weather_code,wind_speed_10m'
+  + '&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,weather_code,wind_speed_10m,wind_gusts_10m'
   + '&hourly=temperature_2m,weather_code,precipitation_probability,is_day'
   + '&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset,precipitation_probability_max'
-  + '&timezone=Asia%2FShanghai&forecast_days=7';
+  + '&timezone=Asia%2FShanghai&forecast_days=10';
 const AQ_URL = 'https://air-quality-api.open-meteo.com/v1/air-quality?latitude='+CFG.lat+'&longitude='+CFG.lon
   + '&current=pm2_5,pm10';
 
@@ -221,6 +226,8 @@ function render(){
   const d0=lastFC.daily;
   $('hl').textContent='最高 '+Math.round(d0.temperature_2m_max[0])+'°  最低 '+Math.round(d0.temperature_2m_min[0])+'°';
   const wind=Math.round(c.wind_speed_10m);
+  const gust=Math.round(c.wind_gusts_10m||0);
+  $('summary').textContent='今天将持续'+txt+'。阵风风速最高 '+gust+' km/h。';
   $('meta').innerHTML='体感 '+Math.round(c.apparent_temperature)+'° · 湿度 '+c.relative_humidity_2m+'% · 风 '+wind+' km/h<br>'
     +'日出 '+d0.sunrise[0].slice(11)+' · 日落 '+d0.sunset[0].slice(11);
 
