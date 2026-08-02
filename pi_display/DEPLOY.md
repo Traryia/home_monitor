@@ -33,6 +33,13 @@ nohup chromium --kiosk --noerrdialogs --disable-infobars --no-first-run \
 - 屏幕截图验证: `grim /tmp/shot.png`（同上的环境变量）
 - 无 DPMS 熄屏配置，屏幕常亮；页面自身带 Wake Lock 兜底
 
+## 退出 / 唤出
+
+- 临时退出: 键盘 Alt+F4，或 `ssh pi@192.168.3.36 "pkill chromium"`
+- 唤出: 重启自动拉起（autostart）；或双击桌面图标「天气显示」
+  (`~/Desktop/天气显示.desktop`, 2026-08-02 创建)；或 ssh 手动启动命令（见上）
+- 永久关闭自启: `sed -i 's|^chromium|#chromium|' ~/.config/labwc/autostart`
+
 ## 数据源
 
 - 预报: api.open-meteo.com（WMO 天气码 → 中文 + SVG 图标）
