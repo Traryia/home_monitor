@@ -3,6 +3,31 @@
 ================================================================
 
 
+2026-08-02 (晚7)  天气显示屏 v6.2 - 根治"字体变小" (DPR 0.75)
+
+  [现象] 页面偶尔整体变小 (字体/SVG 约为 75%, 卡片格不变), 重启后依旧
+
+  [排查路径]
+  1. 怀疑触屏捏合缩放 -> 加 --disable-pinch, 无效
+  2. 尝试页面内 lockScale (CSS zoom 抵消), 方向搞反且 CSS zoom 无法
+     修复 DPR 级问题, 回退
+  3. --remote-debugging-port=9222 + ssh -L 转发 + CDP Runtime.evaluate 实测:
+     innerWidth=1365 devicePixelRatio=0.75 (屏幕 1024x600, 窗口 fullscreen)
+
+  [根因] 默认 chromium profile (~/.config/chromium) 的 Local State 固化了
+  device_scale_factor 0.75 (该 profile 浏览过其它网站, 含历史缩放记录);
+  全新 profile 实测 DPR=1 正常
+
+  [修复] kiosk 改用专用 profile --user-data-dir=~/.config/chromium-kiosk
+  + --force-device-scale-factor=1 (autostart 和桌面图标同步更新),
+  与桌面浏览完全隔离
+
+  [教训]
+  - kiosk 浏览器第一天就该用独立 profile, 不跟桌面共用
+  - 页面内 JS 修不了渲染管线的缩放问题, 先量 (CDP) 再改
+  - grim 截图是合成器 buffer, 与屏幕一致, 可作为判据
+
+
 2026-08-02 (晚6)  天气显示屏 v6.1 - 轮盘放大为主体
 
   - 用户标注: 风罗盘/月相图/气压表盘太小看不清, 板块要以图表为主体
