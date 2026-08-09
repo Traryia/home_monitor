@@ -3,6 +3,32 @@
 ================================================================
 
 
+2026-08-10 (凌晨)  Pi5 安装 RustDesk 1.4.9 远程控制
+
+  [背景] 用户问向日葵可否装树莓派。可以 (麒麟ARM64包), 但向日葵
+    Linux 客户端只支持 X11, Wayland 下远程黑屏, 与 labwc kiosk
+    冲突 -> 改用 RustDesk (Wayland 经 pipewire 抓屏)
+
+  [安装] rustdesk-1.4.9-aarch64.deb (GitHub 官方 release, PC 下载
+    scp 到 Pi); dpkg -i + apt -f; rustdesk.service active+enabled
+    (root 服务 + pi 用户 agent 均正常)
+
+  [Wayland 配置] Pi 已有 pipewire 1.4.2 + xdg-desktop-portal +
+    portal-wlr 0.7.1 (labwc 走 wlr 协议)。预先写
+    ~/.config/xdg-desktop-portal-wlr/config:
+      [screencast] chooser_type=none, output_name=HDMI-A-1
+    否则首次远程时 portal-wlr 会在 kiosk 屏上弹 slurp 输出选择器,
+    触摸屏没法操作
+
+  [凭证] ID 509752545, 固定密码已设 (见本机记录, 不落盘仓库)
+    注意: 未实际连接验证过画面/输入, 待用户首次连接确认;
+    若黑屏排查方向: portal-wlr 是否起来、labwc wlr-screencopy、
+    RustDesk 日志 journalctl -u rustdesk
+
+  [坑] pkill -f xdg-desktop-portal-wlr 会把含该字符串的自身
+    bash -c 命令行也杀掉 (ssh 返回 255), 配置已写入无影响
+
+
 2026-08-09 (晚11)  天气屏 v7.3 - P3 温度单位 °C + 状态卡分行
 
   [反馈] 用户截图指出: 室外温度卡单位只显示 "°" 不对; 传感器状态卡

@@ -109,6 +109,9 @@
   [x] Pi eth0 ↔ BBB eth0 网线直连 (192.168.10.0/30)
   [x] BBB eth0 静态IP持久化 (systemd-networkd)
   [x] ESP32 固件读取与备份
+  [x] RustDesk 1.4.9 远控 (2026-08-10): rustdesk.service 自启;
+      Wayland 抓屏走 pipewire + portal-wlr (config 已固定 HDMI-A-1,
+      免弹选择器); ID/密码见本机记录, 勿入仓库
 
 
 
