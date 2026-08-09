@@ -3,6 +3,27 @@
 ================================================================
 
 
+2026-08-09 (晚10)  项目瘦身: 清理验证/一次性文件
+
+  [仓库删除 17 个文件] (均可从 git 历史恢复)
+    * pi_display/wx_*.png ×14 — 各版本 grim 验证截图 (含上一轮误入的
+      wx_online_proof.png); DEPLOY.md 文件清单同步更新, 注明恢复方法
+    * pi_display/wx_api_test.sh — Open-Meteo API 一次性连通性测试
+    * pi_display/inspect_display.sh — 显示环境一次性侦察脚本
+    * pi5_deploy.py — 一次性 DB 迁移工具 (5列 ALTER 早已执行完;
+      曾被归类"核心保留", 实为一次性, 本次删除)
+
+  [ESP32 设备删除 30 个文件] tmp_*.py 一次性测试脚本 28 个 +
+    check_i2c.py + test_bh1750.py (mpremote exec 批量删除);
+    保留: main.py (v4.0 当前固件) + 3 个旧固件备份 + config.json
+
+  [保留判断] D:\Work 根目录 (PRINCIPLES.md / project_design /
+    开发板资料) 不在本仓库范围, 未动
+
+  [结果] 仓库 tracked 文件 38→21: 代码 7 + 服务 3 + 配置备份 3 +
+    文档 6 + .gitattributes/.gitignore
+
+
 2026-08-09 (晚9补)  项目文档勘误 (v4.0 重写过程中发现的错误描述)
 
   * ARCHITECTURE.md §2 "当前状态 (v0.1-alpha)" 多处过时:

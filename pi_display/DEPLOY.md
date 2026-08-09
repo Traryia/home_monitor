@@ -8,7 +8,8 @@
 - `kiosk_control.py` — kiosk 控制服务（127.0.0.1:8977，仅供页面按钮调用）：
   `/close` 关闭 Chromium（页面按钮两段确认）、`/minimize` 最小化（wtype 注入 A-F9 → labwc Iconify）
 - `wx_launch.sh` — 幂等启动器（已在运行则先杀再起）：autostart、桌面图标、ssh 手动唤出统一入口
-- `wx_*.png` — 各版本效果截图（最新定稿: `wx_v69.png` P1 / `wx_v68_p2.png` P2 / `wx_v71_p3.png` P3, Pi 实机 grim）
+
+（历史效果截图已于 2026-08-09 清理，如需查看从 git 历史恢复: `git show <id>:pi_display/wx_v69.png`）
 
 ## 部署（PC → Pi）
 
