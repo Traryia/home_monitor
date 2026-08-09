@@ -872,10 +872,10 @@ async function pullOutdoor(){
     $('oStTxt').textContent=online?'在线':'离线';
     $('oStTxt').style.color=online?'#4cd964':'#ff5e3a';
     const up=s.uptime!=null?Math.floor(s.uptime/3600)+' 小时 '+(Math.floor(s.uptime/60)%60)+' 分':'--';
-    $('oStD').textContent=(st?('更新于 '+(st.last_seen||'--').slice(11)):'')+' · 信号 '+(s.rssi!=null?s.rssi+' dBm':'--')+' · 已运行 '+up;
+    $('oStD').innerHTML=(st?('更新于 '+(st.last_seen||'--').slice(11)):'--')+'<br>信号 '+(s.rssi!=null?s.rssi+' dBm':'--')+'<br>已运行 '+up;
     const cards=[$('oT'),$('oH'),$('oP'),$('oL')];
     cards.forEach(e=>e.classList.toggle('dim',!online));
-    if(s.temperature!=null) $('oT').innerHTML=Math.round(s.temperature*10)/10+'<small>°</small>';
+    if(s.temperature!=null) $('oT').innerHTML=Math.round(s.temperature*10)/10+'<small>°C</small>';
     if(s.humidity!=null) $('oH').innerHTML=Math.round(s.humidity)+'<small>%</small>';
     if(s.pressure!=null) $('oP').innerHTML=Math.round(s.pressure)+'<small>hPa</small>';
     if(s.lux!=null){ $('oL').innerHTML=Math.round(s.lux)+'<small>lux</small>'; $('oLD').textContent=luxLevel(s.lux); }
@@ -908,7 +908,7 @@ async function pullOutdoorCurves(){
       }
       if(el==='cT24'&&data.length){
         const vs=data.filter(d=>d.v!=null).map(d=>d.v);
-        if(vs.length) $('oTHL').textContent='24h 最低 '+Math.min.apply(null,vs)+'° · 最高 '+Math.max.apply(null,vs)+'°';
+        if(vs.length) $('oTHL').textContent='24h 最低 '+Math.min.apply(null,vs)+'°C · 最高 '+Math.max.apply(null,vs)+'°C';
       }
     }catch(e){}
   }
