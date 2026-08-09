@@ -3,6 +3,22 @@
 ================================================================
 
 
+2026-08-09 (晚9补)  项目文档勘误 (v4.0 重写过程中发现的错误描述)
+
+  * ARCHITECTURE.md §2 "当前状态 (v0.1-alpha)" 多处过时:
+    - "当前数据流 UDP/JSON → Pi:9999" → 早已是 MQTT → Mosquitto:1883
+    - "Mosquitto 已安装(未配置运行)" → 已在运行 (匿名 listener 1883)
+    - "SQLite 3.46 已安装" → python3 sqlite3 模块可用, 但 sqlite3
+      CLI 不存在, DB 操作一律用 python3 / scp 脚本
+    已加 2026-08-09 勘误批注 (保留原始快照, 不篡改历史记录)
+  * README.txt 常用命令删除 "nc -ul 9999 查看UDP数据" (UDP 时代残留)
+  * README.txt 固件版本 v3.0→v4.0; 上报周期 10s→2s; 收集器 v3.1→v4.0
+  * README.txt 补充: ESP32 直连 PC COM5 刷机命令; Pi 无 sqlite3 CLI
+  * 核实 ESP32 flash 实际内容: 备份固件 3 个仍在, 另有约 30 个
+    tmp_*.py 一次性测试脚本堆积待清理 (README 已备注)
+  * VERSIONS.txt 增补 v4.0 两条里程碑
+
+
 2026-08-09 (晚9)  数据传输链路重写: ESP32 v4.0 + Collector v4.0 (断网补传)
 
   [需求] 用户重写要求: 解决丢包链路的数据空洞问题 (8-09 晚实测
@@ -27,6 +43,9 @@
   [坑] MicroPython 时间纪元是 2000-01-01 而非 1970! time.time()
     比 Unix 秒少 946684800, 首版 ts 因此被 TS_VALID 阈值判为未对时
     而缺失; 修正为 +EPOCH_OFFSET 转换后入库验证 lag≈2s
+  [坑] mpremote 进 raw repl 偶发失败 ("could not enter raw repl",
+    设备正常打印数据但 Ctrl-C 没被接管), 直接重试同一条命令即可,
+    无需拔插 (CH340 死锁那种才需要物理恢复)
 
   [验证] COM5 刷机 REPL 观察启动 (WiFi→NTP→MQTT→2s PUB); Pi 端
     实时数据 db timestamp 与 ts 同秒; 构造 ts=1小时前的测试消息,

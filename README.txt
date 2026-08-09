@@ -74,6 +74,10 @@
   数据上报: MQTT home/sensors → Pi5 Mosquitto:1883 (每2秒, 断网缓存补传)
   备份固件: main.py.bak (MQTT旧版, BH1750 only)
             main.py.bak2 (UDP旧版, BH1750 only)
+            main.py.udp.bak (UDP更早版)
+  运行时文件: spool.jsonl (v4.0 断网缓存, 仅断网时出现)
+  注(2026-08-09 核实): 设备 flash 上还堆着约30个 tmp_*.py 一次性
+    测试脚本和 check_i2c.py/test_bh1750.py, 待清理
 
 ----------------------------------------------------------------
   常用命令
@@ -92,8 +96,11 @@
   ssh pi5 "python3 -m mpremote connect /dev/ttyACM1 fs ls"
   ssh pi5 "python3 -m mpremote connect /dev/ttyACM1 fs cat main.py"
 
-  # 查看 UDP 数据 (在 Pi 上)
-  nc -ul 9999
+  # ESP32 也可直连 PC (COM5), 本地刷机:
+  #   /c/Windows/py.exe -m mpremote connect COM5 fs cp main.py :main.py
+  #   (raw repl 偶发进入失败, 重试即可)
+
+  # Pi 上无 sqlite3 CLI, DB 操作用 python3 -c 或 scp 脚本执行
 
 ----------------------------------------------------------------
   已完成配置

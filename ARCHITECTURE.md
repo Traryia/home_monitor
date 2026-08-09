@@ -56,6 +56,13 @@
   SQLite 3.46     : 已安装 (无数据库)
   nginx / web     : 未安装
 
+  [2026-08-09 勘误] 本小节为 v0.1 快照, 现状:
+    数据流早已改为 MQTT: ESP32 ──(MQTT/QoS1每2秒, 断网补传)──>
+      Mosquitto:1883 → mqtt_collector.py → ~/home_monitor/sensors.db
+    Mosquitto 在运行 (匿名 listener 1883, 见 config_backups/)
+    SQLite 仅 python3 sqlite3 模块可用, sqlite3 CLI 未安装;
+      DB 操作一律用 python3 或 scp 脚本
+
 [ESP32-S3 硬件能力]
   CPU:   240MHz Xtensa LX7 双核
   RAM:   512KB SRAM + 8MB PSRAM
