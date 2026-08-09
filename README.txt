@@ -152,10 +152,13 @@ API端点:
 硬件: 微雪 1024x600 HDMI 触摸屏 (HDMI-A-1, 触控已映射 labwc rc.xml)
 系统: labwc + lightdm autologin pi, Chromium kiosk
 
-页面: pi_display/weather.html  两页, 手动滑动/圆点切换 (无自动轮播)
+页面: pi_display/weather.html  三页, 手动滑动/圆点切换 (无自动轮播)
   P1 概览: 时钟/城市/大温度/天气摘要/AQI/高温降雨提醒
            + 今日温度曲线(大卡, 0~24时, 日出日落虚线+当前时刻点)
            + 明日温度曲线(小卡) + 10日预报  (v6.8)
+  P3 室外 (v7.0): ESP32 实时温度/湿度/气压/光照大卡 + 24h温度/7天温度/
+           24h光照曲线 + 传感器状态 + ADC电压; 数据来自本机 dashboard
+           (:5000 /api/current + /api/outdoor), 30s 轮询, 离线变灰
   P2 详情 (4列x3行): 平均 | 体感 | 风(左数据+右罗盘, 占2格)
                      紫外线 | 日出(弧线) | 月相(左数据+右月图, 占2格)
                      湿度 | 气压(表盘) | 降水 | 能见度

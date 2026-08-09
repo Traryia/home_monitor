@@ -18,7 +18,7 @@ pi5/dashboard.service     v1.0  systemd 服务 (开机自启)
 pi5/mqtt-collector.service v1.0  systemd 服务 (开机自启)
 
 --- ESP32 代码 (户外节点) ---
-esp32/main.py             v10   当前固件: BH1750 + WS2812 + MQTT
+esp32/main.py             v3.1  当前固件: 5传感器 + MQTT 2s上报 + WiFi重连
   ESP32文件: main.py                 (/dev/ttyACM1)
   备份: main.py.udp.bak  (UDP版本)
         main.py.bak       (旧MQTT版本, broker=192.168.3.37)
@@ -85,6 +85,10 @@ DB path: /home/pi/home_monitor/sensors.db (5.5MB)
 2026-08-09 | weather.html        | v6.9 | 顶栏新增最小化/关闭按钮 (两段确认)
 2026-08-09 | pi_display/kiosk_control.py | v1.0 | kiosk 控制服务 (127.0.0.1:8977): /close /minimize
 2026-08-09 | pi_display/wx_launch.sh     | v1.0 | 幂等启动器: autostart/桌面图标/ssh 统一入口
+2026-08-09 | esp32/main.py       | v3.1 | 上报 10s->2s; WiFi 断线重连 (已从设备同步回仓库)
+2026-08-09 | mqtt_collector.py   | v3.2 | 分层存储: 原始 8 天 + sensor_minute 聚合 2 年; 索引/WAL (已从Pi同步回仓库)
+2026-08-09 | dashboard.py        | v5.2 | /api/outdoor 分层查询 + CORS (供天气屏 file:// 跨域)
+2026-08-09 | weather.html        | v7.0 | 新增 P3 室外传感器页 (实时大卡+24h/7天曲线)
 2026-08-02 | pi_display/DEPLOY.md| v1.1 | 部署/唤出/退出/截图/CDP诊断手册
 2026-08-02 | labwc autostart     | v1.1 | chromium kiosk 自启 (专用profile+锁定DPR+禁pinch)
 2026-08-02 | Desktop/天气显示.desktop | v1.1 | 双击唤出天气屏 (同 kiosk 参数)

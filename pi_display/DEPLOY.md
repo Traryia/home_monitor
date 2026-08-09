@@ -8,7 +8,7 @@
 - `kiosk_control.py` — kiosk 控制服务（127.0.0.1:8977，仅供页面按钮调用）：
   `/close` 关闭 Chromium（页面按钮两段确认）、`/minimize` 最小化（wtype 注入 A-F9 → labwc Iconify）
 - `wx_launch.sh` — 幂等启动器（已在运行则先杀再起）：autostart、桌面图标、ssh 手动唤出统一入口
-- `wx_*.png` — 各版本效果截图（最新定稿: `wx_v69.png` P1 / `wx_v68_p2.png` P2, Pi 实机 grim）
+- `wx_*.png` — 各版本效果截图（最新定稿: `wx_v69.png` P1 / `wx_v68_p2.png` P2 / `wx_v70_p3.png` P3, Pi 实机 grim）
 
 ## 部署（PC → Pi）
 
@@ -36,7 +36,7 @@ nohup /home/pi/home_monitor/pi_display/wx_launch.sh >/tmp/chromium.log 2>&1 &
   页面所有 px 内容渲染为 75%（"字体变小"）；专用干净 profile 根治且与桌面浏览隔离
 - `--force-device-scale-factor=1`: 保险，防止 DPR 漂移
 - `--disable-pinch`: 禁止触屏双指缩放
-- 截图调试另一页: URL 加 `#p2`（页内需 go(1)），或临时 `--remote-debugging-port=9222`
+- 截图调试另一页: URL 加 `#p1`/`#p2`/`#p3`（页内需对应 go(n)），或临时 `--remote-debugging-port=9222`
   + `ssh -L 9222:127.0.0.1:9222` 后用 CDP Runtime.evaluate 查 innerWidth/devicePixelRatio
   （websocket 客户端需 suppress_origin）
 - 注意: chromium 单例模式会忽略第二次启动的参数和 URL，调试多开需 --user-data-dir 隔离

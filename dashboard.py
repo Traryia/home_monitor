@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Home Monitor Dashboard v5.1 - Unified layout, 24h charts"""
+"""Home Monitor Dashboard v5.2 - Unified layout, 24h charts, /api/outdoor"""
 import sqlite3, json, os, time, threading, requests
 from flask import Flask, jsonify, request
 from datetime import datetime
@@ -265,5 +265,41 @@ def api_esp_rssi():
 def api_bbb_cpu():
     rows=query_all("SELECT printf('%02d:%02d',cast(strftime('%H',timestamp) as integer),(cast(strftime('%M',timestamp) as integer)/5)*5) as ts,round(avg(cpu_usage),1) as cpu_usage FROM sensor_data WHERE device='bbb-indoor' AND cpu_usage IS NOT NULL AND timestamp>=datetime('now','localtime','-24 hours') GROUP BY ts ORDER BY MIN(timestamp)")
     return jsonify([{"timestamp":r["ts"],"cpu_usage":r["cpu_usage"]} for r in rows])
+
+# ---- 室外传感器历史 (v5.2, 供天气屏 P3 等 file:// 页面跨域调用) ----
+OUTDOOR_FIELDS = {"lux","temperature","humidity","pressure","adc0_voltage","adc1_voltage","rssi"}
+
+@app.after_request
+def _cors(resp):
+    resp.headers["Access-Control-Allow-Origin"] = "*"
+    return resp
+
+@app.route("/api/outdoor")
+def api_outdoor():
+    field = request.args.get("field", "temperature")
+    if field not in OUTDOOR_FIELDS:
+        return jsonify({"error": "unknown field"}), 400
+    try:
+        hours = min(max(int(request.args.get("hours", 24)), 1), 24*400)
+    except ValueError:
+        hours = 24
+    if hours <= 48:
+        # 原始表 (保留 8 天): <=24h 按 5 分钟分桶, <=48h 按 1 小时分桶
+        bucket = 5 if hours <= 24 else 60
+        rows = query_all(
+            "SELECT strftime('%Y-%m-%d %H:',timestamp) || printf('%02d',(cast(strftime('%M',timestamp) as integer)/?)*?) as ts,"
+            " round(avg(" + field + "),2) as v FROM sensor_data"
+            " WHERE device='esp32-outdoor' AND " + field + " IS NOT NULL"
+            " AND timestamp>=datetime('now','localtime','-%d hours')" % hours
+            + " GROUP BY ts ORDER BY MIN(timestamp)", (bucket, bucket))
+    else:
+        # 1 分钟聚合表 (保留 2 年), 按 1 小时分桶
+        rows = query_all(
+            "SELECT strftime('%Y-%m-%d %H',minute)||':00' as ts,"
+            " round(avg(" + field + "),2) as v FROM sensor_minute"
+            " WHERE device='esp32-outdoor' AND " + field + " IS NOT NULL"
+            " AND minute>=datetime('now','localtime','-%d hours')" % hours
+            + " GROUP BY strftime('%Y-%m-%d %H',minute) ORDER BY ts")
+    return jsonify([{"t": r["ts"], "v": r["v"]} for r in rows])
 
 if __name__ == "__main__": app.run(host="0.0.0.0", port=5000, debug=False)

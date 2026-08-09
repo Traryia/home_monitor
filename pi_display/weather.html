@@ -19,7 +19,7 @@ body.day{background:linear-gradient(180deg,#2e6ab8 0%,#4f8fd4 55%,#7db4e6 100%)}
 @keyframes tw{0%,100%{opacity:.15}50%{opacity:.85}}
 .cloud{position:fixed;border-radius:50%;background:rgba(255,255,255,.07);filter:blur(28px);pointer-events:none;z-index:0}
 /* ---------- pager ---------- */
-#pager{display:flex;width:200vw;height:100vh;position:relative;z-index:1;
+#pager{display:flex;width:300vw;height:100vh;position:relative;z-index:1;
   transition:transform .45s ease}
 .page{width:100vw;height:100vh;padding:10px;flex:none;overflow:hidden}
 #dots{position:fixed;bottom:8px;left:50%;transform:translateX(-50%);z-index:5;
@@ -90,7 +90,11 @@ body.day .sbtn{background:rgba(8,30,66,.32)}
   border:1.5px solid rgba(0,0,0,.3);transform:translate(-50%,-50%)}
 #foot{margin-left:auto;font-weight:400;font-size:10.5px;color:rgba(235,240,255,.35)}
 /* ---------- page 2: 4x3 ---------- */
-#grid2{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(3,1fr);gap:12px;height:100%}
+#grid2,#grid3{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(3,1fr);gap:12px;height:100%}
+.chartBox{flex:1;min-height:0;margin:1px -5px -5px}
+.dim{opacity:.35}
+#oStDot{width:10px;height:10px;border-radius:50%;background:#4cd964;flex:none}
+#oStRow{display:flex;align-items:center;gap:8px;font-size:16px;font-weight:700;margin-top:2px}
 .dcard{display:flex;flex-direction:column;min-height:0;min-width:0}
 .dcard .big{font-size:42px;font-weight:600;line-height:1.12;letter-spacing:-.5px}
 .dcard .big small{font-size:17px;font-weight:600;color:rgba(235,240,255,.85)}
@@ -246,8 +250,59 @@ body.day .sbtn{background:rgba(8,30,66,.32)}
       </div>
     </div>
   </section>
+  <!-- ============ P3 室外传感器 ============ -->
+  <section class="page">
+    <div id="grid3">
+      <div class="card dcard" id="oTempCard">
+        <div class="ctitle"><svg width="13" height="13" viewBox="0 0 24 24"><path d="M10 4a2 2 0 0 1 4 0v7.3a4.5 4.5 0 1 1-4 0z" fill="none" stroke="rgba(235,240,255,.55)" stroke-width="1.8"/><circle cx="12" cy="16.5" r="2" fill="rgba(235,240,255,.55)"/></svg>室外温度</div>
+        <div class="big" id="oT">--</div>
+        <div class="sub" id="oTSub">ESP32 · 实时</div>
+        <div class="desc" id="oTHL">--</div>
+      </div>
+      <div class="card dcard">
+        <div class="ctitle"><svg width="13" height="13" viewBox="0 0 24 24"><path d="M12 3s5.5 6 5.5 10a5.5 5.5 0 1 1-11 0C6.5 9 12 3 12 3z" fill="none" stroke="rgba(235,240,255,.55)" stroke-width="1.8"/></svg>室外湿度</div>
+        <div class="big" id="oH">--<small>%</small></div>
+        <div class="desc" id="oHD">--</div>
+      </div>
+      <div class="card dcard">
+        <div class="ctitle"><svg width="13" height="13" viewBox="0 0 24 24"><path d="M4 15a8 8 0 1 1 16 0" fill="none" stroke="rgba(235,240,255,.55)" stroke-width="1.8"/><path d="M12 15l4-5" stroke="rgba(235,240,255,.55)" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="15" r="1.6" fill="rgba(235,240,255,.55)"/></svg>室外气压</div>
+        <div class="big" id="oP">--<small>hPa</small></div>
+        <div class="desc" id="oPD">--</div>
+      </div>
+      <div class="card dcard">
+        <div class="ctitle"><svg width="13" height="13" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4" fill="none" stroke="rgba(235,240,255,.55)" stroke-width="1.8"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M18.7 5.3l-2.1 2.1M7.4 16.6l-2.1 2.1" stroke="rgba(235,240,255,.55)" stroke-width="1.6" stroke-linecap="round"/></svg>光照强度</div>
+        <div class="big" id="oL">--<small>lux</small></div>
+        <div class="desc" id="oLD">--</div>
+      </div>
+      <div class="card dcard wide">
+        <div class="ctitle">24 小时温度</div>
+        <div class="chartBox" id="cT24"></div>
+      </div>
+      <div class="card dcard wide">
+        <div class="ctitle">7 天温度</div>
+        <div class="chartBox" id="cT7d"></div>
+      </div>
+      <div class="card dcard wide">
+        <div class="ctitle">24 小时光照</div>
+        <div class="chartBox" id="cL24"></div>
+      </div>
+      <div class="card dcard">
+        <div class="ctitle"><svg width="13" height="13" viewBox="0 0 24 24"><path d="M2 9a15 15 0 0 1 20 0M5.5 12.5a10 10 0 0 1 13 0M9 16a5 5 0 0 1 6 0" stroke="rgba(235,240,255,.55)" stroke-width="1.8" fill="none" stroke-linecap="round"/><circle cx="12" cy="19" r="1.6" fill="rgba(235,240,255,.55)"/></svg>传感器状态</div>
+        <div id="oStRow"><span id="oStDot"></span><span id="oStTxt">--</span></div>
+        <div class="desc" id="oStD" style="margin-top:6px">--</div>
+      </div>
+      <div class="card dcard">
+        <div class="ctitle"><svg width="13" height="13" viewBox="0 0 24 24"><path d="M13 2 4.5 13.5H11L9.5 22 19 10h-6.5z" fill="none" stroke="rgba(235,240,255,.55)" stroke-width="1.8" stroke-linejoin="round"/></svg>ADC 电压</div>
+        <div class="wrows" style="margin-top:2px">
+          <div class="wr"><span>A0</span><b id="oA0">--</b></div>
+          <div class="wr"><span>A1</span><b id="oA1">--</b></div>
+        </div>
+        <div class="desc">ADS1115 · 两路采集</div>
+      </div>
+    </div>
+  </section>
 </div>
-<div id="dots"><span class="on"></span><span></span></div>
+<div id="dots"><span class="on"></span><span></span><span></span></div>
 
 <script>
 'use strict';
@@ -745,8 +800,123 @@ $('btnClose').addEventListener('click',()=>{
   }
 });
 
+/* ================= P3 室外传感器 ================= */
+const DASH='http://192.168.3.36:5000';
+
+/* 通用平滑曲线 (供 P3; 与 dayTrendSVG 分时序数据结构不同) */
+function miniCurveSVG(W,H,data,color,day){
+  const pts=data.filter(d=>d.v!=null);
+  if(pts.length<2||W<60||H<40) return '';
+  const vs=pts.map(d=>d.v);
+  const lo=Math.min.apply(null,vs), hi=Math.max.apply(null,vs);
+  const span=Math.max(0.5,hi-lo);
+  const padL=8,padR=8,padT=14,padB=16;
+  const pw=W-padL-padR, ph=H-padT-padB;
+  const yLo=lo-span*0.2, yHi=hi+span*0.2;
+  const n=pts.length;
+  const X=i=>padL+pw*i/(n-1);
+  const Y=v=>padT+ph*(1-(v-yLo)/(yHi-yLo));
+  const p=pts.map((d,i)=>[X(i),Y(d.v)]);
+  const line=smoothPath(p);
+  const area=line+'L '+X(n-1).toFixed(1)+' '+(padT+ph)+'L '+padL+' '+(padT+ph)+' Z';
+
+  /* 横轴: 最多 6 个均匀刻度; 24h 显示 HH:MM, 多天显示 MM-DD */
+  let axis='';
+  const step=Math.max(1,Math.floor((n-1)/5));
+  for(let i=0;i<n;i+=step){
+    const t=day?pts[i].t.slice(5,10):pts[i].t.slice(11);
+    const first=i===0, lastI=i+step>=n;
+    const a=first?'start':(lastI?'end':'middle');
+    const ax=first?X(i)+1:(lastI?X(i)-1:X(i));
+    axis+='<text x="'+ax.toFixed(1)+'" y="'+(H-3)+'" fill="rgba(235,240,255,.45)" font-size="10" text-anchor="'+a+'">'+t+'</text>';
+    if(lastI&&!first) break;
+  }
+
+  /* 最高/最低/最新值标注 */
+  let iHi=0,iLo=0;
+  for(let i=0;i<n;i++){ if(pts[i].v>pts[iHi].v)iHi=i; if(pts[i].v<pts[iLo].v)iLo=i; }
+  const ext='<text x="'+X(iHi).toFixed(1)+'" y="'+(Y(pts[iHi].v)-4).toFixed(1)+'" fill="rgba(255,255,255,.85)" font-size="10.5" font-weight="700" text-anchor="middle">'+pts[iHi].v+'</text>'
+    +'<text x="'+X(iLo).toFixed(1)+'" y="'+(Y(pts[iLo].v)+13).toFixed(1)+'" fill="rgba(255,255,255,.6)" font-size="10.5" font-weight="700" text-anchor="middle">'+pts[iLo].v+'</text>';
+  const last='<circle cx="'+X(n-1).toFixed(1)+'" cy="'+Y(pts[n-1].v).toFixed(1)+'" r="3.5" fill="#fff" stroke="rgba(0,0,0,.35)" stroke-width="1.5"/>';
+
+  const gid='mc'+color.replace(/[^0-9a-z]/gi,'');
+  return '<svg width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'">'
+    +'<defs><linearGradient id="'+gid+'" x1="0" y1="0" x2="0" y2="1">'
+    +'<stop offset="0%" stop-color="'+color+'" stop-opacity=".30"/><stop offset="100%" stop-color="'+color+'" stop-opacity="0"/></linearGradient></defs>'
+    +'<path d="'+area+'" fill="url(#'+gid+')"/>'
+    +'<path d="'+line+'" fill="none" stroke="'+color+'" stroke-width="2.2" stroke-linecap="round"/>'
+    +ext+axis+last+'</svg>';
+}
+
+function luxLevel(v){
+  if(v<1) return '黑夜';
+  if(v<50) return '昏暗';
+  if(v<500) return '室内光线';
+  if(v<10000) return '明亮';
+  return '阳光直射';
+}
+
+let _oOffline=false;
+async function pullOutdoor(){
+  try{
+    const r=await fetch(DASH+'/api/current',{cache:'no-store'});
+    if(!r.ok) throw 0;
+    const j=await r.json();
+    const s=(j.sensors||[]).find(x=>x.device==='esp32-outdoor');
+    const st=(j.status||[]).find(x=>x.device==='esp32-outdoor');
+    if(!s) throw 0;
+    const online=st&&st.online===1;
+    _oOffline=!online;
+    $('oStDot').style.background=online?'#4cd964':'#ff5e3a';
+    $('oStTxt').textContent=online?'在线':'离线';
+    $('oStTxt').style.color=online?'#4cd964':'#ff5e3a';
+    const up=s.uptime!=null?Math.floor(s.uptime/3600)+' 小时 '+(Math.floor(s.uptime/60)%60)+' 分':'--';
+    $('oStD').textContent=(st?('更新于 '+(st.last_seen||'--').slice(11)):'')+' · 信号 '+(s.rssi!=null?s.rssi+' dBm':'--')+' · 已运行 '+up;
+    const cards=[$('oT'),$('oH'),$('oP'),$('oL')];
+    cards.forEach(e=>e.classList.toggle('dim',!online));
+    if(s.temperature!=null) $('oT').innerHTML=Math.round(s.temperature*10)/10+'<small>°</small>';
+    if(s.humidity!=null) $('oH').innerHTML=Math.round(s.humidity)+'<small>%</small>';
+    if(s.pressure!=null) $('oP').innerHTML=Math.round(s.pressure)+'<small>hPa</small>';
+    if(s.lux!=null){ $('oL').innerHTML=Math.round(s.lux)+'<small>lux</small>'; $('oLD').textContent=luxLevel(s.lux); }
+    $('oHD').textContent=s.humidity==null?'--':(s.humidity>=80?'潮湿':(s.humidity>=60?'偏湿':(s.humidity>=40?'舒适':'干燥')));
+    $('oPD').textContent=s.pressure==null?'--':(s.pressure>=1022?'气压偏高':(s.pressure<=1005?'气压偏低':'气压正常'));
+    if(s.adc0_voltage!=null) $('oA0').textContent=s.adc0_voltage.toFixed(3)+' V';
+    if(s.adc1_voltage!=null) $('oA1').textContent=s.adc1_voltage.toFixed(3)+' V';
+  }catch(e){
+    _oOffline=true;
+    $('oStDot').style.background='#ff5e3a';
+    $('oStTxt').textContent='无法连接';
+    $('oStTxt').style.color='#ff5e3a';
+    $('oStD').textContent='dashboard 服务不可达';
+  }
+}
+
+async function pullOutdoorCurves(){
+  const jobs=[['temperature',24,'cT24','#ffb74d',false],
+              ['temperature',168,'cT7d','#ff8a5c',true],
+              ['lux',24,'cL24','#ffd60a',false]];
+  for(const [field,hours,el,color,day] of jobs){
+    try{
+      const r=await fetch(DASH+'/api/outdoor?field='+field+'&hours='+hours,{cache:'no-store'});
+      if(!r.ok) throw 0;
+      const data=await r.json();
+      const box=$(el);
+      if(box.clientWidth>60){
+        const svg=miniCurveSVG(box.clientWidth,box.clientHeight,data,color,day);
+        box.innerHTML=svg||'<div style="height:100%;display:flex;align-items:center;justify-content:center;font-size:13px;color:rgba(235,240,255,.4)">数据积累中…</div>';
+      }
+      if(el==='cT24'&&data.length){
+        const vs=data.filter(d=>d.v!=null).map(d=>d.v);
+        if(vs.length) $('oTHL').textContent='24h 最低 '+Math.min.apply(null,vs)+'° · 最高 '+Math.max.apply(null,vs)+'°';
+      }
+    }catch(e){}
+  }
+}
+setInterval(pullOutdoor,30000); pullOutdoor();
+setInterval(pullOutdoorCurves,600000); pullOutdoorCurves();
+
 /* ================= 翻页 (仅手动, 不自动切换) ================= */
-const NPAGES=2;
+const NPAGES=3;
 let page=0;
 function go(p){
   page=((p%NPAGES)+NPAGES)%NPAGES;
@@ -771,8 +941,8 @@ $('dots').addEventListener('click',e=>{
   const i=[...$('dots').children].indexOf(e.target);
   if(i>=0) go(i);
 });
-/* 支持 #p1/#p2 指定初始页 (调试用) */
-const _hp=location.hash.match(/^#p([12])$/); if(_hp) go(parseInt(_hp[1])-1);
+/* 支持 #p1/#p2/#p3 指定初始页 (调试用) */
+const _hp=location.hash.match(/^#p([123])$/); if(_hp) go(parseInt(_hp[1])-1);
 
 /* ================= 拉取 ================= */
 async function pull(){
