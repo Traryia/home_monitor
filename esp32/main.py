@@ -1,8 +1,9 @@
-# ESP32-S3: 5-sensor + MQTT v3.2
+# ESP32-S3: 5-sensor + MQTT v3.3
 # BH1750(SDA=4,SCL=17,0x23) BMP280(38,39,0x76) SHT30(41,42,0x44) ADS1115(43,44,0x48)
 # v3.1: 上报 10s->2s; 主循环加 WiFi 断线重连 (室外部署)
-# v3.2: keepalive 30->120 (丢包链路下 broker 45s 踢人太敏感);
-#       发布失败先关旧 socket 防泄漏; 失败退避 5s->2s; WDT 30s 看门狗
+# v3.2: keepalive 30->120; 发布失败先关旧 socket; 退避 5s->2s; WDT 30s
+# v3.3: 发布改 QoS1 — 等 PUBACK, 死连接 30s 内必被 WDT 复位 (QoS0 写进
+#       内核缓冲区就"成功", 连接死了十几分钟都发现不了, 2026-08-09 晚实测)
 from machine import Pin, SoftI2C
 from umqtt.simple import MQTTClient
 import network, time, json, gc, machine
@@ -182,10 +183,10 @@ while True:
 
     try:
         if client:
-            client.publish('home/sensors', json.dumps(payload))
+            client.publish('home/sensors', json.dumps(payload), qos=1)
         else:
             if mqtt_connect():
-                client.publish('home/sensors', json.dumps(payload))
+                client.publish('home/sensors', json.dumps(payload), qos=1)
         count += 1
         print('PUB #%d lux=%s T=%s H=%s P=%s A0=%s A1=%s' %
               (count, lux, payload['temperature'], h_sht, p_bmp, adc0, adc1))
