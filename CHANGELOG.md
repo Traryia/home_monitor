@@ -3,6 +3,29 @@
 ================================================================
 
 
+2026-08-09 (晚8)  ESP32 v3.2 加固固件 + 在线判定逻辑澄清
+
+  [背景] 用户问"重启了还是离线, 怎么判断在线的"。判定链路:
+    每收到一条 MQTT 消息 -> device_status.online=1 + last_seen=now;
+    收集器巡检 last_seen 超时 -> online=0 (v3.2 前 45s, v3.3 起 120s);
+    天气屏 P3 每 30s 读 /api/current 的 online 标志
+
+  [排查] mosquitto 日志: esp32-5sensor 反复 "exceeded timeout"
+    (keepalive=30, broker 45s 无包踢人; TCP 在丢包链路上 stall 触发)。
+    ping ESP32 丢包 0~60% 波动, RTT 最高 1.4s。RSSI -52 (此为下行
+    强度; 上行 ESP32 发射受 3.3V 供电质量影响) -> 链路劣化主因
+    仍指向供电 (同晚 CH340 死锁 + brownout 重启互证)
+
+  [改动]
+    * esp32/main.py v3.2: keepalive 30->120 (broker 容忍 180s stall);
+      发布失败先 client.sock.close() 防 socket 泄漏; 退避 5s->2s;
+      WDT 30s 看门狗 (TCP 写阻塞卡死时自动复位, 实测已在工作)
+    * mqtt_collector.py v3.3: 离线阈值 45s->120s (配合 keepalive)
+
+  [效果] broker 踢人次数降为 0; 丢包时段数据仍成簇延迟到达
+    (TCP 天性), 显示层不再抖动。根治需改善 ESP32 供电/线材
+
+
 2026-08-09 (晚7)  天气显示屏 v7.1 - P3 微调 + ESP32 掉线根因定位
 
   [改动] P3 「7天温度」卡改为「24小时湿度」曲线 (用户要求; 7天数据

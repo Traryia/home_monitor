@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-# MQTT Collector v3.2
+# MQTT Collector v3.3
+# v3.3: 离线判定 45s->120s (配合 ESP32 keepalive=120, 丢包链路减少显示抖动)
 # v3.2: 分层存储 — 原始数据保留 8 天, sensor_minute 1分钟聚合保留 2 年;
 #       (device,timestamp) 索引; WAL 模式 (dashboard 并发读); 启动时 VACUUM
 import paho.mqtt.client as mqtt
@@ -137,7 +138,7 @@ def offline_checker():
     while True:
         try:
             conn = sqlite3.connect(DB)
-            conn.execute("UPDATE device_status SET online=0 WHERE last_seen < datetime('now','localtime','-45 seconds')")
+            conn.execute("UPDATE device_status SET online=0 WHERE last_seen < datetime('now','localtime','-120 seconds')")
             conn.commit(); conn.close()
         except: pass
         time.sleep(30)

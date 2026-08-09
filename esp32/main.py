@@ -1,6 +1,8 @@
-# ESP32-S3: 5-sensor + MQTT v3.1
+# ESP32-S3: 5-sensor + MQTT v3.2
 # BH1750(SDA=4,SCL=17,0x23) BMP280(38,39,0x76) SHT30(41,42,0x44) ADS1115(43,44,0x48)
 # v3.1: 上报 10s->2s; 主循环加 WiFi 断线重连 (室外部署)
+# v3.2: keepalive 30->120 (丢包链路下 broker 45s 踢人太敏感);
+#       发布失败先关旧 socket 防泄漏; 失败退避 5s->2s; WDT 30s 看门狗
 from machine import Pin, SoftI2C
 from umqtt.simple import MQTTClient
 import network, time, json, gc, machine
@@ -119,7 +121,7 @@ client = None
 def mqtt_connect():
     global client
     try:
-        client = MQTTClient('esp32-5sensor', MQTT_BROKER, keepalive=30)
+        client = MQTTClient('esp32-5sensor', MQTT_BROKER, keepalive=120)
         client.connect()
         print('MQTT connected')
         return True
@@ -132,8 +134,10 @@ mqtt_connect()
 count = 0
 last_pub = time.ticks_ms()
 last_wifi_try = time.ticks_ms()
+wdt = machine.WDT(timeout=30000)   # 30 秒不喂狗自动复位 (防卡死)
 
 while True:
+    wdt.feed()
     now = time.ticks_ms()
     if time.ticks_diff(now, last_pub) < INTERVAL_MS:
         time.sleep_ms(100)
@@ -187,6 +191,8 @@ while True:
               (count, lux, payload['temperature'], h_sht, p_bmp, adc0, adc1))
     except Exception as e:
         print('PUB fail:', e)
+        try: client.sock.close()
+        except: pass
         client = None
-        time.sleep(5)
+        time.sleep(2)
     last_pub = now
