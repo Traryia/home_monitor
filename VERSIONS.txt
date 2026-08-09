@@ -92,6 +92,7 @@ DB path: /home/pi/home_monitor/sensors.db (5.5MB)
 2026-08-09 | weather.html        | v7.1 | P3 7天温度卡改24小时湿度; 曲线标注防裁切
 2026-08-09 | esp32/main.py       | v4.0 | 传输层重写: NTP对时+ts时间戳+flash断网缓存(spool.jsonl)+恢复补传
 2026-08-09 | mqtt_collector.py   | v4.0 | 接收/存储重写: 补传按原始ts入库; 持久连接+写锁; 数值清洗
+2026-08-09 | weather.html        | v7.2 | P3实时卡轮询 30s→2s (手电测试感知延迟20s的根因)
 2026-08-02 | pi_display/DEPLOY.md| v1.1 | 部署/唤出/退出/截图/CDP诊断手册
 2026-08-02 | labwc autostart     | v1.1 | chromium kiosk 自启 (专用profile+锁定DPR+禁pinch)
 2026-08-02 | Desktop/天气显示.desktop | v1.1 | 双击唤出天气屏 (同 kiosk 参数)
