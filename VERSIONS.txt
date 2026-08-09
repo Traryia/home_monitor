@@ -89,6 +89,7 @@ DB path: /home/pi/home_monitor/sensors.db (5.5MB)
 2026-08-09 | mqtt_collector.py   | v3.2 | 分层存储: 原始 8 天 + sensor_minute 聚合 2 年; 索引/WAL (已从Pi同步回仓库)
 2026-08-09 | dashboard.py        | v5.2 | /api/outdoor 分层查询 + CORS (供天气屏 file:// 跨域)
 2026-08-09 | weather.html        | v7.0 | 新增 P3 室外传感器页 (实时大卡+24h/7天曲线)
+2026-08-09 | weather.html        | v7.1 | P3 7天温度卡改24小时湿度; 曲线标注防裁切
 2026-08-02 | pi_display/DEPLOY.md| v1.1 | 部署/唤出/退出/截图/CDP诊断手册
 2026-08-02 | labwc autostart     | v1.1 | chromium kiosk 自启 (专用profile+锁定DPR+禁pinch)
 2026-08-02 | Desktop/天气显示.desktop | v1.1 | 双击唤出天气屏 (同 kiosk 参数)

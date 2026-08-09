@@ -279,8 +279,8 @@ body.day .sbtn{background:rgba(8,30,66,.32)}
         <div class="chartBox" id="cT24"></div>
       </div>
       <div class="card dcard wide">
-        <div class="ctitle">7 天温度</div>
-        <div class="chartBox" id="cT7d"></div>
+        <div class="ctitle">24 小时湿度</div>
+        <div class="chartBox" id="cH24"></div>
       </div>
       <div class="card dcard wide">
         <div class="ctitle">24 小时光照</div>
@@ -832,11 +832,12 @@ function miniCurveSVG(W,H,data,color,day){
     if(lastI&&!first) break;
   }
 
-  /* 最高/最低/最新值标注 */
+  /* 最高/最低/最新值标注 (clamp 防边缘裁切) */
   let iHi=0,iLo=0;
   for(let i=0;i<n;i++){ if(pts[i].v>pts[iHi].v)iHi=i; if(pts[i].v<pts[iLo].v)iLo=i; }
-  const ext='<text x="'+X(iHi).toFixed(1)+'" y="'+(Y(pts[iHi].v)-4).toFixed(1)+'" fill="rgba(255,255,255,.85)" font-size="10.5" font-weight="700" text-anchor="middle">'+pts[iHi].v+'</text>'
-    +'<text x="'+X(iLo).toFixed(1)+'" y="'+(Y(pts[iLo].v)+13).toFixed(1)+'" fill="rgba(255,255,255,.6)" font-size="10.5" font-weight="700" text-anchor="middle">'+pts[iLo].v+'</text>';
+  const cx=x=>Math.min(W-padR-16,Math.max(padL+16,x));
+  const ext='<text x="'+cx(X(iHi)).toFixed(1)+'" y="'+(Y(pts[iHi].v)-4).toFixed(1)+'" fill="rgba(255,255,255,.85)" font-size="10.5" font-weight="700" text-anchor="middle">'+pts[iHi].v+'</text>'
+    +'<text x="'+cx(X(iLo)).toFixed(1)+'" y="'+(Y(pts[iLo].v)+13).toFixed(1)+'" fill="rgba(255,255,255,.6)" font-size="10.5" font-weight="700" text-anchor="middle">'+pts[iLo].v+'</text>';
   const last='<circle cx="'+X(n-1).toFixed(1)+'" cy="'+Y(pts[n-1].v).toFixed(1)+'" r="3.5" fill="#fff" stroke="rgba(0,0,0,.35)" stroke-width="1.5"/>';
 
   const gid='mc'+color.replace(/[^0-9a-z]/gi,'');
@@ -893,7 +894,7 @@ async function pullOutdoor(){
 
 async function pullOutdoorCurves(){
   const jobs=[['temperature',24,'cT24','#ffb74d',false],
-              ['temperature',168,'cT7d','#ff8a5c',true],
+              ['humidity',24,'cH24','#5eb2f7',false],
               ['lux',24,'cL24','#ffd60a',false]];
   for(const [field,hours,el,color,day] of jobs){
     try{
