@@ -5,7 +5,7 @@
 ## 文件
 
 - `weather.html` — 天气页面（Open-Meteo 预报 + 空气质量，客户端每 30 分钟拉取）
-- `wx_shot_v*.png` — 各版本效果截图（v3 为 Pi 实机 grim 截图）
+- `wx_*.png` — 各版本效果截图（最新定稿: `wx_v68.png` P1 / `wx_v68_p2.png` P2, Pi 实机 grim）
 
 ## 部署（PC → Pi）
 
