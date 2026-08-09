@@ -36,6 +36,17 @@ body.day .card{background:rgba(8,30,66,.32)}
 #app{display:grid;grid-template-columns:352px 1fr;gap:12px;height:100%}
 #left{display:flex;flex-direction:column;min-height:0}
 #topbar{display:flex;align-items:baseline;gap:10px}
+#sysbtns{margin-left:auto;align-self:center;display:flex;gap:8px}
+.sbtn{width:32px;height:32px;border-radius:50%;border:1px solid rgba(255,255,255,.12);
+  background:rgba(13,24,48,.55);color:rgba(235,240,255,.8);display:flex;align-items:center;justify-content:center;
+  cursor:none;padding:0;appearance:none;-webkit-appearance:none;font:inherit}
+body.day .sbtn{background:rgba(8,30,66,.32)}
+.sbtn:active{background:rgba(255,255,255,.18)}
+#btnClose .txt{display:none}
+#btnClose.arm{width:auto;height:32px;border-radius:16px;padding:0 12px;background:#ff5e3a;
+  border-color:transparent;color:#fff;font-size:13px;font-weight:700}
+#btnClose.arm .txt{display:inline}
+#btnClose.arm svg{display:none}
 #clock{font-size:36px;font-weight:600;line-height:1;letter-spacing:0}
 #date{font-size:14px;color:rgba(235,240,255,.65)}
 #hero{text-align:center;margin-top:4px}
@@ -120,6 +131,10 @@ body.day .card{background:rgba(8,30,66,.32)}
         <div id="topbar">
           <div id="clock">--:--</div>
           <div id="date">----年--月--日</div>
+          <div id="sysbtns">
+            <button class="sbtn" id="btnMin" aria-label="最小化"><svg width="14" height="14" viewBox="0 0 24 24"><path d="M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button>
+            <button class="sbtn" id="btnClose" aria-label="关闭"><svg width="14" height="14" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg><span class="txt">确认关闭</span></button>
+          </div>
         </div>
         <div id="hero">
           <div id="loc"></div>
@@ -713,6 +728,22 @@ function setStatus(ok){
     $('statusTxt').textContent= lastFC? '更新失败，显示缓存数据':'数据获取失败，重试中…';
   }
 }
+
+/* ================= kiosk 控制按钮 ================= */
+/* 本机 kiosk_control.py 服务 (127.0.0.1:8977); file:// 页面用 no-cors 发请求即可 */
+const KC='http://127.0.0.1:8977';
+$('btnMin').addEventListener('click',()=>{ fetch(KC+'/minimize',{mode:'no-cors'}).catch(()=>{}); });
+let _armT=null;
+$('btnClose').addEventListener('click',()=>{
+  const b=$('btnClose');
+  if(!b.classList.contains('arm')){
+    b.classList.add('arm');   /* 第一段: 变红提示, 3 秒内再按才执行 */
+    clearTimeout(_armT); _armT=setTimeout(()=>b.classList.remove('arm'),3000);
+  }else{
+    b.classList.remove('arm'); clearTimeout(_armT);
+    fetch(KC+'/close',{mode:'no-cors'}).catch(()=>{});
+  }
+});
 
 /* ================= 翻页 (仅手动, 不自动切换) ================= */
 const NPAGES=2;

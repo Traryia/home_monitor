@@ -5,7 +5,10 @@
 ## 文件
 
 - `weather.html` — 天气页面（Open-Meteo 预报 + 空气质量，客户端每 30 分钟拉取）
-- `wx_*.png` — 各版本效果截图（最新定稿: `wx_v68.png` P1 / `wx_v68_p2.png` P2, Pi 实机 grim）
+- `kiosk_control.py` — kiosk 控制服务（127.0.0.1:8977，仅供页面按钮调用）：
+  `/close` 关闭 Chromium（页面按钮两段确认）、`/minimize` 最小化（wtype 注入 A-F9 → labwc Iconify）
+- `wx_launch.sh` — 幂等启动器（已在运行则先杀再起）：autostart、桌面图标、ssh 手动唤出统一入口
+- `wx_*.png` — 各版本效果截图（最新定稿: `wx_v69.png` P1 / `wx_v68_p2.png` P2, Pi 实机 grim）
 
 ## 部署（PC → Pi）
 
@@ -20,15 +23,12 @@ scp weather.html pi@192.168.3.36:/home/pi/home_monitor/pi_display/weather.html
 ## Pi 上的配置
 
 - 页面位置: `/home/pi/home_monitor/pi_display/weather.html`
-- 开机自启: `~/.config/labwc/autostart` → chromium --kiosk（labwc 会话，autologin pi）
+- 开机自启: `~/.config/labwc/autostart` → kiosk_control.py + wx_launch.sh（labwc 会话，autologin pi）
 - 手动启动（ssh 中）:
 
 ```bash
 export XDG_RUNTIME_DIR=/run/user/1000 WAYLAND_DISPLAY=wayland-0
-nohup chromium --user-data-dir=/home/pi/.config/chromium-kiosk --kiosk --disable-pinch \
-  --force-device-scale-factor=1 --noerrdialogs --disable-infobars --no-first-run \
-  --disable-session-crashed-bubble --ozone-platform=wayland \
-  file:///home/pi/home_monitor/pi_display/weather.html >/tmp/chromium.log 2>&1 &
+nohup /home/pi/home_monitor/pi_display/wx_launch.sh >/tmp/chromium.log 2>&1 &
 ```
 
 - `--user-data-dir=~/.config/chromium-kiosk`: kiosk 专用 profile。2026-08-02 发现
@@ -43,12 +43,17 @@ nohup chromium --user-data-dir=/home/pi/.config/chromium-kiosk --kiosk --disable
 - 屏幕截图验证: `grim /tmp/shot.png`（同上的环境变量）
 - 无 DPMS 熄屏配置，屏幕常亮；页面自身带 Wake Lock 兜底
 
-## 退出 / 唤出
+## 退出 / 唤出 / 最小化
 
-- 临时退出: 键盘 Alt+F4，或 `ssh pi@192.168.3.36 "pkill chromium"`
-- 唤出: 重启自动拉起（autostart）；或双击桌面图标「天气显示」
-  (`~/Desktop/天气显示.desktop`, 2026-08-02 创建)；或 ssh 手动启动命令（见上）
-- 永久关闭自启: `sed -i 's|^chromium|#chromium|' ~/.config/labwc/autostart`
+- 页面左上角有「—」最小化 和「×」关闭按钮（v6.9+，经 kiosk_control.py 执行）：
+  - 最小化：单击，窗口 Iconify 到底部任务栏，点任务栏「新吴区天气」或桌面图标可恢复
+  - 关闭：两段确认（第一次点变红「确认关闭」，3 秒内再点执行），防止触屏误触
+- 键盘: Alt+F4 关闭，Alt+F9 最小化（rc.xml 键绑 Iconify），或 `ssh pi@192.168.3.36 "pkill chromium"`
+- 唤出: 重启自动拉起（autostart）；或双击桌面图标「天气显示」；或 ssh 手动启动（见上）。
+  桌面图标和 ssh 启动统一走 `wx_launch.sh`（幂等：已在运行则先杀再起）
+- 永久关闭自启: `sed -i 's|^chromium|#chromium|;s|^python3|#python3|;s|^/home|#/home|' ~/.config/labwc/autostart`
+- labwc 改配置后生效: `LABWC_PID=$(pgrep -x labwc|head -1) labwc --reconfigure`
+  （0.9.x 需要 LABWC_PID 环境变量）
 
 ## 数据源
 

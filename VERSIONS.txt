@@ -82,6 +82,9 @@ DB path: /home/pi/home_monitor/sensors.db (5.5MB)
 2026-08-02 | weather.html        | v6.2 | 两页触控天气屏: iOS粗体大卡, 4x3详情, DPR修复
 2026-08-03 | weather.html        | v6.3 | 逐时/紫外线/能见度/露点小时索引修复 (按当前小时滚动)
 2026-08-09 | weather.html        | v6.8 | P1双温度曲线(今日大卡+明日小卡, 日出日落虚线); P2罗盘/气压指针修复 (详见 CHANGELOG v6.4~v6.8)
+2026-08-09 | weather.html        | v6.9 | 顶栏新增最小化/关闭按钮 (两段确认)
+2026-08-09 | pi_display/kiosk_control.py | v1.0 | kiosk 控制服务 (127.0.0.1:8977): /close /minimize
+2026-08-09 | pi_display/wx_launch.sh     | v1.0 | 幂等启动器: autostart/桌面图标/ssh 统一入口
 2026-08-02 | pi_display/DEPLOY.md| v1.1 | 部署/唤出/退出/截图/CDP诊断手册
 2026-08-02 | labwc autostart     | v1.1 | chromium kiosk 自启 (专用profile+锁定DPR+禁pinch)
 2026-08-02 | Desktop/天气显示.desktop | v1.1 | 双击唤出天气屏 (同 kiosk 参数)

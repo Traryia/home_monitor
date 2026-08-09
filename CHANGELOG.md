@@ -3,6 +3,29 @@
 ================================================================
 
 
+2026-08-09 (晚5)  天气显示屏 v6.9 - 页面新增关闭/最小化按钮
+
+  [需求] 触屏上无法退出/最小化 kiosk (此前只能键盘 Alt+F4 或 ssh)
+
+  [实现] file:// 页面的 window.close() 对 kiosk 主窗口无效, 故:
+    * 新增 pi_display/kiosk_control.py: 仅监听 127.0.0.1:8977 的
+      控制服务 (stdlib http.server), /close=pkill chromium,
+      /minimize=wtype 注入 A-F9; 页面 fetch 用 no-cors (请求到达即可)
+    * 新增 pi_display/wx_launch.sh: 幂等启动器 (先杀再起),
+      autostart/桌面图标/ssh 三个入口统一; 桌面图标 thus 兼作
+      "最小化后恢复" 的触屏路径 (labwc 无面板时 Iconify 窗口点不回,
+      实测本机有任务栏, 也可点任务栏恢复)
+    * labwc rc.xml 增加 A-F9 -> Iconify 键绑; 安装 wtype (apt)
+    * 页面左上顶栏: 「—」最小化单击执行; 「×」关闭两段确认
+      (第一次点变红"确认关闭", 3 秒内再点执行), 防触屏误触
+
+  [坑] labwc 0.9.8 的 --reconfigure 需要 LABWC_PID 环境变量:
+    LABWC_PID=$(pgrep -x labwc|head -1) labwc --reconfigure
+
+  [验证] 实机逐项测试: /minimize Iconify 到任务栏、启动器恢复、
+    /close 退出、重新拉起, grim 逐步截图
+
+
 2026-08-09 (晚4)  天气显示屏 v6.8 - P2 罗盘/气压表盘修复
 
   [修复] 罗盘风向箭杆从圆心穿过风速数字 ("28 km/h" 被压):
