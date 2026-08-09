@@ -1,26 +1,60 @@
-# ESP32-S3: 5-sensor + MQTT v3.3
+# ESP32-S3: 5-sensor + MQTT v4.0 (数据传输层重写)
 # BH1750(SDA=4,SCL=17,0x23) BMP280(38,39,0x76) SHT30(41,42,0x44) ADS1115(43,44,0x48)
-# v3.1: 上报 10s->2s; 主循环加 WiFi 断线重连 (室外部署)
-# v3.2: keepalive 30->120; 发布失败先关旧 socket; 退避 5s->2s; WDT 30s
-# v3.3: 发布改 QoS1 — 等 PUBACK, 死连接 30s 内必被 WDT 复位 (QoS0 写进
-#       内核缓冲区就"成功", 连接死了十几分钟都发现不了, 2026-08-09 晚实测)
-from machine import Pin, SoftI2C
+# v4.0: NTP 对时, 每条数据带采集时刻 ts(epoch); 断网/断连期间采样写入
+#       flash 缓存 spool.jsonl, 恢复后按原始时间戳补传 —— 丢包链路不再
+#       留下数据空洞 (2026-08-09 晚实测 2s 节奏丢包率一度 84%)
+#       保留 v3.3 验证过的策略: QoS1 + keepalive 120 + WDT 30s +
+#       发布失败先关旧 socket
+from machine import Pin, SoftI2C, WDT
 from umqtt.simple import MQTTClient
-import network, time, json, gc, machine
+import network, time, json, gc, os, ntptime
 
 WIFI_SSID = 'HUAWEI-FI18J2'
 WIFI_PASS = '199908130922'
 MQTT_BROKER = '192.168.3.36'
+MQTT_TOPIC = 'home/sensors'
 INTERVAL_MS = 2000
+
+SPOOL_FILE = 'spool.jsonl'
+SPOOL_TMP = 'spool.tmp'
+SPOOL_MAX_BYTES = 1000000   # ~5000 条 ≈ 2.7 小时; 超限丢弃最旧一半
+FLUSH_PER_CYCLE = 60        # 联网后每个采集周期最多补传条数
+# MicroPython 时间纪元是 2000-01-01 (ESP32 端口), 转 Unix 秒需 +946684800;
+# time.time() 大于 TS_VALID 才认为 NTP 已同步 (≈2025-10, 2000 纪元)
+EPOCH_OFFSET = 946684800
+TS_VALID = 813000000
+
+wdt = WDT(timeout=30000)    # 30 秒不喂狗自动复位 (TCP 写卡死时兜底)
 
 # ---- WiFi ----
 wlan = network.WLAN(network.STA_IF)
 wlan.active(True)
-wlan.connect(WIFI_SSID, WIFI_PASS)
-for i in range(30):
-    if wlan.isconnected(): break
-    time.sleep(1)
-print('WiFi:', wlan.ifconfig() if wlan.isconnected() else 'FAIL')
+
+def wifi_connect_blocking(timeout_s=30):
+    wlan.connect(WIFI_SSID, WIFI_PASS)
+    for i in range(timeout_s):
+        wdt.feed()
+        if wlan.isconnected(): break
+        time.sleep(1)
+    print('WiFi:', wlan.ifconfig() if wlan.isconnected() else 'FAIL')
+
+# ---- NTP ----
+last_ntp_try = 0
+def ntp_ensure(force=False):
+    """已同步则直接返回; 未同步时每分钟最多试一轮 (三个服务器)"""
+    global last_ntp_try
+    if time.time() > TS_VALID: return
+    now = time.ticks_ms()
+    if not force and time.ticks_diff(now, last_ntp_try) < 60000: return
+    last_ntp_try = now
+    for host in ('ntp.aliyun.com', 'cn.pool.ntp.org', 'time.cloudflare.com'):
+        try:
+            ntptime.host = host
+            ntptime.settime()
+            print('NTP synced via', host)
+            return
+        except Exception as e:
+            print('NTP fail:', host, e)
 
 # ---- I2C setup helper ----
 def i2c_bus(sda, scl):
@@ -117,54 +151,98 @@ def read_ads1115():
         return v0, v1
     except: return None, None
 
+# ---- Spool (flash 断网缓存) ----
+def spool_add(line):
+    """断网时把一条 JSON 追加到缓存; 超上限丢弃最旧一半"""
+    try:
+        f = open(SPOOL_FILE, 'a')
+        f.write(line + '\n')
+        f.close()
+        if os.stat(SPOOL_FILE)[6] > SPOOL_MAX_BYTES:
+            spool_shrink()
+    except Exception as e:
+        print('spool err:', e)
+
+def spool_shrink():
+    # 两遍扫描不整体读入内存; 保留较新的一半
+    n = 0
+    f = open(SPOOL_FILE)
+    for _ in f: n += 1
+    f.close()
+    skip = n // 2
+    f = open(SPOOL_FILE)
+    t = open(SPOOL_TMP, 'w')
+    i = 0
+    for line in f:
+        i += 1
+        if i > skip: t.write(line)
+    f.close(); t.close()
+    os.remove(SPOOL_FILE)
+    os.rename(SPOOL_TMP, SPOOL_FILE)
+    print('spool full, dropped oldest', skip)
+
+def spool_size():
+    try: return os.stat(SPOOL_FILE)[6]
+    except OSError: return 0
+
+def spool_flush(max_lines):
+    """补传最多 max_lines 条。publish 异常直接抛出 —— 原 spool 文件未动,
+    最多重传已在飞的一批; 正常结束后已确认的条目从文件中移除"""
+    try: os.remove(SPOOL_TMP)
+    except OSError: pass
+    try: f = open(SPOOL_FILE)
+    except OSError: return 0
+    sent = 0
+    t = open(SPOOL_TMP, 'w')
+    for line in f:
+        line = line.rstrip()
+        if not line: continue
+        if sent < max_lines:
+            client.publish(MQTT_TOPIC, line, qos=1)   # 异常抛给调用方
+            sent += 1
+            if sent % 10 == 0: wdt.feed()
+        else:
+            t.write(line + '\n')
+    f.close(); t.close()
+    os.remove(SPOOL_FILE)
+    if os.stat(SPOOL_TMP)[6] > 0:
+        os.rename(SPOOL_TMP, SPOOL_FILE)
+    else:
+        os.remove(SPOOL_TMP)
+    if sent: print('flushed %d spooled, left ~%dB' % (sent, spool_size()))
+    return sent
+
 # ---- MQTT ----
 client = None
+
+def mqtt_close():
+    global client
+    if client:
+        try: client.sock.close()
+        except: pass
+    client = None
+
 def mqtt_connect():
     global client
     try:
+        mqtt_close()
         client = MQTTClient('esp32-5sensor', MQTT_BROKER, keepalive=120)
         client.connect()
         print('MQTT connected')
         return True
     except Exception as e:
         print('MQTT fail:', e)
+        client = None
         return False
 
-# ---- Main loop ----
-mqtt_connect()
-count = 0
-last_pub = time.ticks_ms()
-last_wifi_try = time.ticks_ms()
-wdt = machine.WDT(timeout=30000)   # 30 秒不喂狗自动复位 (防卡死)
-
-while True:
-    wdt.feed()
-    now = time.ticks_ms()
-    if time.ticks_diff(now, last_pub) < INTERVAL_MS:
-        time.sleep_ms(100)
-        continue
-
-    # WiFi 掉线则重连 (每 5 秒最多试一次), 未连接时跳过采集
-    if not wlan.isconnected():
-        client = None
-        if time.ticks_diff(now, last_wifi_try) > 5000:
-            last_wifi_try = now
-            print('WiFi lost, reconnecting...')
-            try:
-                wlan.disconnect()
-            except: pass
-            wlan.connect(WIFI_SSID, WIFI_PASS)
-        time.sleep_ms(500)
-        continue
-
+# ---- Sample ----
+def collect(count):
     lux = read_bh1750()
     t_sht, h_sht = read_sht30()
     t_bmp, p_bmp = read_bmp280()
     adc0, adc1 = read_ads1115()
-
     gc.collect()
-
-    payload = {
+    p = {
         'device': 'esp32-outdoor',
         'type': 'sensor',
         'lux': lux,
@@ -180,20 +258,65 @@ while True:
         'mem_used': gc.mem_alloc(),
         'ip': wlan.ifconfig()[0] if wlan.isconnected() else '0.0.0.0'
     }
+    if time.time() > TS_VALID:
+        p['ts'] = int(time.time()) + EPOCH_OFFSET   # 采集时刻(Unix秒); 未对时则省略
+    return p
+
+# ---- Boot ----
+wifi_connect_blocking()
+if wlan.isconnected():
+    ntp_ensure(force=True)
+mqtt_connect()
+
+# ---- Main loop ----
+count = 0
+last_sample = time.ticks_ms()
+last_wifi_try = time.ticks_ms()
+
+while True:
+    wdt.feed()
+    now = time.ticks_ms()
+    if time.ticks_diff(now, last_sample) < INTERVAL_MS:
+        time.sleep_ms(100)
+        continue
+    last_sample = now
+
+    payload = collect(count)
+    line = json.dumps(payload)
+
+    if not wlan.isconnected():
+        mqtt_close()
+        spool_add(line)
+        count += 1
+        print('OFFLINE spooled #%d (%dB)' % (count, spool_size()))
+        if time.ticks_diff(now, last_wifi_try) > 5000:
+            last_wifi_try = now
+            print('WiFi lost, reconnecting...')
+            try: wlan.disconnect()
+            except: pass
+            wlan.connect(WIFI_SSID, WIFI_PASS)
+        continue
+
+    ntp_ensure()   # 未对时则周期性重试
+
+    if client is None and not mqtt_connect():
+        spool_add(line)
+        count += 1
+        time.sleep(2)
+        continue
 
     try:
-        if client:
-            client.publish('home/sensors', json.dumps(payload), qos=1)
-        else:
-            if mqtt_connect():
-                client.publish('home/sensors', json.dumps(payload), qos=1)
+        if spool_size():
+            spool_flush(FLUSH_PER_CYCLE)
+        client.publish(MQTT_TOPIC, line, qos=1)
         count += 1
         print('PUB #%d lux=%s T=%s H=%s P=%s A0=%s A1=%s' %
-              (count, lux, payload['temperature'], h_sht, p_bmp, adc0, adc1))
+              (count, payload['lux'], payload['temperature'],
+               payload['humidity'], payload['pressure'],
+               payload['adc0_voltage'], payload['adc1_voltage']))
     except Exception as e:
         print('PUB fail:', e)
-        try: client.sock.close()
-        except: pass
-        client = None
+        spool_add(line)
+        count += 1
+        mqtt_close()
         time.sleep(2)
-    last_pub = now

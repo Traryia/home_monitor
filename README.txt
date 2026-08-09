@@ -65,13 +65,13 @@
   芯片: ESP32-S3, 240MHz, 8MB PSRAM, 16MB Flash
   WiFi: 192.168.3.39 (STA, SSID: HUAWEI-FI18J2)
   连接: 直连PC USB COM5 (mpremote), 或通过 Pi USB /dev/ttyACM1
-  固件: main.py v3.0 (MQTT, 5传感器, 每10s上报)
+  固件: main.py v4.0 (MQTT, 5传感器, 2s上报, NTP对时+断网缓存补传)
   传感器:
     - BH1750 光照    (I2C: SDA=GPIO4, SCL=GPIO17,  addr 0x23, ADDR=LOW)
     - BMP280 气压温度 (I2C: SDA=GPIO38, SCL=GPIO39, addr 0x76)
     - SHT30  温湿度   (I2C: SDA=GPIO41, SCL=GPIO42, addr 0x44)
     - ADS1115 ADC    (I2C: SDA=GPIO43, SCL=GPIO44, addr 0x48, A0+A1)
-  数据上报: MQTT home/sensors → Pi5 Mosquitto:1883 (每10秒)
+  数据上报: MQTT home/sensors → Pi5 Mosquitto:1883 (每2秒, 断网缓存补传)
   备份固件: main.py.bak (MQTT旧版, BH1750 only)
             main.py.bak2 (UDP旧版, BH1750 only)
 
@@ -129,7 +129,7 @@ API端点:
   GET /api/bbb_cpu           - BBB CPU占用率 24h历史 (500错误待修复)
 
 数据流:
-  ESP32 --(WiFi/MQTT:10s)--> Mosquitto:1883 --> mqtt_collector.py v3.1 --> SQLite (17列)
+  ESP32 --(WiFi/MQTT:2s)--> Mosquitto:1883 --> mqtt_collector.py v4.0 --> SQLite (17列)
   BBB   --(MQTT:10s)-------> Mosquitto:1883 --> mqtt_collector.py --> SQLite
   Pi5   --(内部proc/sys:10s)--> mqtt_collector.py --> SQLite
   Flask dashboard.py v7.0 --> SQLite --> HTML + ECharts(time轴,6曲线)

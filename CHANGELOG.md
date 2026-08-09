@@ -3,6 +3,41 @@
 ================================================================
 
 
+2026-08-09 (晚9)  数据传输链路重写: ESP32 v4.0 + Collector v4.0 (断网补传)
+
+  [需求] 用户重写要求: 解决丢包链路的数据空洞问题 (8-09 晚实测
+    2s 节奏丢包率一度 84%, 40~330s 缺口频繁)。ESP32 已插到 PC
+    (COM5), 本地 mpremote 直接刷机
+
+  [方案] ESP32 断网期间采样写 flash 缓存, 恢复后带原始时间戳补传;
+    收集器按 ts 入库回填历史
+
+  [改动]
+    * esp32/main.py v4.0: NTP 对时 (ntp.aliyun.com 等三轮询), 每条
+      数据带采集时刻 ts; 断网/发布失败时写入 spool.jsonl (上限 1MB
+      ≈ 2.7h, 超限丢最旧一半); 恢复后每周期补传 ≤60 条与实时数据
+      并行; 补传崩溃安全 (tmp 文件 + 批次检查点, 最坏重传一批 ≤60 条
+      产生重复); 保留 v3.3 的 QoS1/keepalive120/WDT30s
+    * mqtt_collector.py v4.0: payload 带合法 ts (过去8天~未来10分钟)
+      按原始采集时间入库, 日志标 BACKFILL(lag=Ns); 持久 SQLite 连接
+      +写锁替代每消息开关库; 启动自检建表 (sensor_data/device_status/
+      sensor_minute CREATE IF NOT EXISTS); 数值字段统一清洗
+    * schema 不变, dashboard/天气屏 P3 无需改动 (已验证 API 200)
+
+  [坑] MicroPython 时间纪元是 2000-01-01 而非 1970! time.time()
+    比 Unix 秒少 946684800, 首版 ts 因此被 TS_VALID 阈值判为未对时
+    而缺失; 修正为 +EPOCH_OFFSET 转换后入库验证 lag≈2s
+
+  [验证] COM5 刷机 REPL 观察启动 (WiFi→NTP→MQTT→2s PUB); Pi 端
+    实时数据 db timestamp 与 ts 同秒; 构造 ts=1小时前的测试消息,
+    DB 按 20:42 原始时间入库 (BACKFILL lag=3600s 日志); 测试数据
+    已清理; dashboard / /api/current /api/outdoor 均 200
+
+  [备注] Pi 上 sqlite3 CLI 不存在 (README 旧述有误), DB 操作用
+    python3 -c / scp 脚本; 一次性验证脚本用完即删 (pi5/verify_v4.py
+    未入库)
+
+
 2026-08-09 (晚8)  ESP32 v3.2 加固固件 + 在线判定逻辑澄清
 
   [背景] 用户问"重启了还是离线, 怎么判断在线的"。判定链路:
