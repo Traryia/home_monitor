@@ -441,9 +441,10 @@ function compassSVG(deg,speed,size){
   }
   const lbl=(t,x,y)=>'<text x="'+x+'" y="'+y+'" fill="rgba(235,240,255,.7)" font-size="11" font-weight="600" text-anchor="middle" dominant-baseline="middle">'+t+'</text>';
   const P=(d,r)=>{const t=d*Math.PI/180;return [(60+Math.sin(t)*r).toFixed(1),(60-Math.cos(t)*r).toFixed(1)];};
-  const [sx,sy]=P(deg,26), [ex,ey]=P(deg,44);            // 箭杆 (起点避开中心数字)
-  const [tx,ty]=P(deg,53);                                // 箭头尖端
-  const [w1x,w1y]=P(deg-8,40), [w2x,w2y]=P(deg+8,40);     // 箭翼
+  const dir=(deg+180)%360;                                 // API风向=风的来向，箭头要指风的去向
+  const [sx,sy]=P(dir,26), [ex,ey]=P(dir,44);              // 箭杆 (起点避开中心数字)
+  const [tx,ty]=P(dir,53);                                 // 箭头尖端
+  const [w1x,w1y]=P(dir-8,40), [w2x,w2y]=P(dir+8,40);      // 箭翼
   return '<svg width="'+size+'" height="'+size+'" viewBox="0 0 120 120">'+ticks
     +lbl('北',60,9)+lbl('东',111,61)+lbl('南',60,113)+lbl('西',9,61)
     +'<line x1="'+sx+'" y1="'+sy+'" x2="'+ex+'" y2="'+ey+'" stroke="#eef1f7" stroke-width="2.4" '+S+'/>'
