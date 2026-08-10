@@ -3,6 +3,26 @@
 ================================================================
 
 
+2026-08-10  P3 传感器状态卡明细字体对齐温度卡风格 (weather.html v7.5)
+
+  [反馈] 用户 VNC 截图指出: 传感器状态卡「更新于/信号/已运行」
+    三行字体太小且未加粗, 与室外温度卡「ESP32 · 实时」不一致
+
+  [修复] weather.html 新增 #oStD 规则: 12px/60%透明 -> 13.5px/
+    font-weight 700/全亮 (color:inherit), line-height 1.5;
+    其余卡片 desc 样式不变
+
+  [部署验证] scp 到 Pi 重启 kiosk 至 #p3, grim 截图确认三行
+    与温度卡副标题同风格; 屏幕停在 P3 (用户正在看的页)
+
+  [经验] ssh 远程命令行里直接写 pkill -f 'chromium.*chromium-kiosk'
+    会匹配到自身 bash -c 命令行导致 ssh 掉线(255)、chromium 未拉起;
+    正确做法: 调 wx_launch.sh (脚本内 pkill 不会自匹配) 或
+    pkill 与启动分两条 ssh 执行
+
+  [提交] 与 VERSIONS.txt v7.4/v7.5 条目同批
+
+
 2026-08-10  修复天气屏风向罗盘箭头方向反了 (weather.html)
 
   [问题] 用户从 VNC 截图发现风卡片罗盘箭头与「方向」文字矛盾:
