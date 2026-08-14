@@ -96,6 +96,7 @@ DB path: /home/pi/home_monitor/sensors.db (5.5MB)
 2026-08-09 | weather.html        | v7.3 | P3温度单位°C; 状态卡 更新于/信号/已运行 分行显示
 2026-08-10 | weather.html        | v7.4 | 修复风向罗盘箭头反了: API风向=来向, 箭头应指去向(deg+180)
 2026-08-10 | weather.html        | v7.5 | P3状态卡 更新于/信号/已运行 改 13.5px 加粗全亮 (对齐温度卡副标题风格)
+2026-08-14 | esp32/main.py       | v4.1 | SHT30湿度公式修正(-6+125→100*raw/65535); ADC单端负偏置归零(悬空-0.246→0V)
 2026-08-10 | RustDesk 1.4.9      | ---- | Pi5 远控 (aarch64 deb); portal-wlr 固定 HDMI-A-1 免弹选择器; 凭证见本机记录
 2026-08-02 | pi_display/DEPLOY.md| v1.1 | 部署/唤出/退出/截图/CDP诊断手册
 2026-08-02 | labwc autostart     | v1.1 | chromium kiosk 自启 (专用profile+锁定DPR+禁pinch)

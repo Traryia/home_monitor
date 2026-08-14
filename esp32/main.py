@@ -1,10 +1,12 @@
-# ESP32-S3: 5-sensor + MQTT v4.0 (数据传输层重写)
+# ESP32-S3: 5-sensor + MQTT v4.1 (温湿度/ADC 修正)
 # BH1750(SDA=4,SCL=17,0x23) BMP280(38,39,0x76) SHT30(41,42,0x44) ADS1115(43,44,0x48)
 # v4.0: NTP 对时, 每条数据带采集时刻 ts(epoch); 断网/断连期间采样写入
 #       flash 缓存 spool.jsonl, 恢复后按原始时间戳补传 —— 丢包链路不再
 #       留下数据空洞 (2026-08-09 晚实测 2s 节奏丢包率一度 84%)
 #       保留 v3.3 验证过的策略: QoS1 + keepalive 120 + WDT 30s +
 #       发布失败先关旧 socket
+# v4.1: SHT30 湿度公式修正 (误用 -6+125*raw/65535 → 100*raw/65535);
+#       ADS1115 单端采样负偏置归零 (悬空噪声显示 -0.246V → 0V)
 from machine import Pin, SoftI2C, WDT
 from umqtt.simple import MQTTClient
 import network, time, json, gc, os, ntptime
@@ -81,7 +83,7 @@ def read_sht30():
         i2c_sht.writeto(0x44, b'\x24\x00'); time.sleep(0.02)
         d = i2c_sht.readfrom(0x44, 6)
         t = -45 + 175 * (d[0] << 8 | d[1]) / 65535
-        h = -6 + 125 * (d[3] << 8 | d[4]) / 65535
+        h = 100 * (d[3] << 8 | d[4]) / 65535
         return round(t, 1), round(h, 1)
     except: return None, None
 
@@ -146,6 +148,7 @@ def read_ads1115():
             v = (d[0] << 8) | d[1]
             if v & 0x8000: v -= 65536
             val = round(v * 4.096 / 32768, 4)
+            if val < 0: val = 0.0   # 单端(AINx vs GND)不该为负, 悬空噪声负偏置归零
             if ch == "A0": v0 = val
             else: v1 = val
         return v0, v1
