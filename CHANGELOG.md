@@ -3,6 +3,25 @@
 ================================================================
 
 
+2026-08-14  离线判定阈值 120s→20s (mqtt_collector.py v4.1)
+
+  [反馈] 用户拔掉 ESP32 供电后传感器状态仍显示在线, 问为什么
+
+  [机制] 在线状态链路: ESP32 每 2s 发 MQTT → collector 更新
+    device_status.last_seen → 后台线程每 30s 把 last_seen 超过
+    OFFLINE_AFTER_S 的设备置 online=0 → weather.html 读 /api/current
+    展示。断电后需等 120s 阈值 + 最多 30s 周期 ≈ 2.5 分钟才翻离线,
+    不是 bug 而是原 120s 阈值(配合 ESP32 keepalive=120)太宽松
+
+  [修改] OFFLINE_AFTER_S 120→20; 离线检查线程 sleep 30→5
+    (否则 20s 阈值配 30s 周期会多拖 30s)。现在最迟 25s 判离线
+    代价: 网络偶发抖动时误报离线的风险上升 (20s 内无数据即判)
+
+  [部署] scp + sudo systemctl restart mqtt-collector, 已生效
+
+  [提交] 与 VERSIONS.txt v4.1 条目同批
+
+
 2026-08-14  ESP32 湿度公式修正 + ADC 悬空负值归零 (esp32/main.py v4.1)
 
   [反馈] 用户报实际湿度仅 75%, 面板却显示 ~93%; 且 A0/A1 未接

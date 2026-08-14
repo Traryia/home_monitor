@@ -4,6 +4,7 @@
 #       原始时间入库, 历史空洞被回填; 持久连接+写锁替代每消息开关库;
 #       启动自检建表; 数值字段统一清洗; 补传日志带 lag 标记
 # v3.3: 离线判定 45s->120s; v3.2: 分层存储 (原始 8 天 / sensor_minute 2 年)
+# v4.1: 离线阈值 120s->20s (2026-08-14 用户要求更快反应; 检查周期 30s->5s)
 import paho.mqtt.client as mqtt
 import sqlite3, json, os, time, logging, threading
 
@@ -15,7 +16,7 @@ MQTT_HOST = 'localhost'
 
 RAW_KEEP_DAYS = 8        # 原始数据保留 (2s/条)
 AGG_KEEP_YEARS = 2       # 1分钟聚合保留
-OFFLINE_AFTER_S = 120    # 配合 ESP32 keepalive=120
+OFFLINE_AFTER_S = 20     # 配合 ESP32 keepalive=120 (20s 内无数据判离线)
 TS_MAX_SKEW_S = 600      # 补传 ts 允许的最大未来偏差
 
 NUM_FIELDS = ('lux', 'temperature', 'humidity', 'pressure',
@@ -207,7 +208,7 @@ def _offline_checker():
             st.mark_offline()
         except Exception as e:
             log.error('offline check error: ' + str(e))
-        time.sleep(30)
+        time.sleep(5)
 
 # ---- Pi 自身系统指标 ----
 _pi_cpu_prev = [0, 0]
