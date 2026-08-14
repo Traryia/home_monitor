@@ -885,6 +885,7 @@ async function pullOutdoor(){
     $('oPD').textContent=s.pressure==null?'--':(s.pressure>=1022?'气压偏高':(s.pressure<=1005?'气压偏低':'气压正常'));
     if(s.adc0_voltage!=null) $('oA0').textContent=s.adc0_voltage.toFixed(3)+' V';
     if(s.adc1_voltage!=null) $('oA1').textContent=s.adc1_voltage.toFixed(3)+' V';
+    if(!_curvesOk) pullOutdoorCurves();  // 后台恢复后立即补画 24h 曲线 (失败则 2s 后重试)
   }catch(e){
     _oOffline=true;
     $('oStDot').style.background='#ff5e3a';
@@ -894,7 +895,9 @@ async function pullOutdoor(){
   }
 }
 
+let _curvesOk=false;  // 曲线最近一次拉取是否成功 (后台恢复后用于立即补画)
 async function pullOutdoorCurves(){
+  let ok=true;
   const jobs=[['temperature',24,'cT24','#ffb74d',false],
               ['humidity',24,'cH24','#5eb2f7',false],
               ['lux',24,'cL24','#ffd60a',false]];
@@ -912,11 +915,12 @@ async function pullOutdoorCurves(){
         const vs=data.filter(d=>d.v!=null).map(d=>d.v);
         if(vs.length) $('oTHL').textContent='24h 最低 '+Math.min.apply(null,vs)+'°C · 最高 '+Math.max.apply(null,vs)+'°C';
       }
-    }catch(e){}
+    }catch(e){ ok=false; }
   }
+  _curvesOk=ok;
 }
 setInterval(pullOutdoor,2000); pullOutdoor();
-setInterval(pullOutdoorCurves,600000); pullOutdoorCurves();
+setInterval(pullOutdoorCurves,60000); pullOutdoorCurves();  // 曲线 1 分钟刷新一次 (原 10 分钟)
 
 /* ================= 翻页 (仅手动, 不自动切换) ================= */
 const NPAGES=3;
