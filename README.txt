@@ -84,9 +84,10 @@
   WiFi: 192.168.3.41, 账户 pi (已装同一把 ed25519 公钥, 免密)
   摄像头: MagicView-UVC800 (UVC 免驱, /dev/video0)
   直播: camera_stream.py → MJPEG http://192.168.3.41:8080 (720p)
-        systemd camera-stream.service 托管 (未 enable)
+        systemd camera-stream.service 托管 (已 enable 开机自启)
+        udev 规则 99-camera-stream.rules: 插入自动启动, 拔出自动停止
         桌面「摄像头直播」图标双击启/停 (~/camera_toggle.sh)
-  代码: 仓库 pi_cam/ (camera_stream.py / camera_toggle.sh / .service)
+  代码: 仓库 pi_cam/ (camera_stream.py / camera_toggle.sh / .service / udev规则)
 
 ----------------------------------------------------------------
   常用命令

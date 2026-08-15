@@ -3,6 +3,24 @@
 ================================================================
 
 
+2026-08-15 (午)  摄像头直播: 开机自启 + USB 插拔自动启停
+
+  [需求] 用户: 摄像头只要插入 USB 就一直启动直播
+
+  [改动] (192.168.3.41)
+    * systemctl enable camera-stream (开机自启)
+    * udev 规则 /etc/udev/rules.d/99-camera-stream.rules:
+      add (idVendor=0edc,idProduct=3080) → SYSTEMD_WANTS 拉起服务;
+      remove → systemctl stop。即使桌面按钮停过, 重新插拔即恢复
+    * 收编 pi_cam/99-camera-stream.rules
+
+  [验证] udevadm test 对 USB 设备节点 dry-run 确认 SYSTEMD_WANTS=
+    camera-stream.service 匹配; is-enabled=enabled, is-active=active
+  [坑] udev 规则的 ATTR{idVendor} 只在 usb 设备节点上有, 接口节点
+    (1-1:1.0) 上没有, dry-run 要对父设备测; remove 事件读不到 ATTR,
+    用 ENV{PRODUCT}=="edc/3080/*" 匹配
+
+
 2026-08-15  新 Pi (192.168.3.41) + USB 摄像头内网直播
 
   [设备] 用户的第二台树莓派 (hostname pi, aarch64, Debian 13 trixie,
