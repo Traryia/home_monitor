@@ -5,7 +5,8 @@ DIR=/home/pi/timelapse
 mkdir -p "$DIR"
 F="$DIR/$(date +%Y-%m-%d_%H%M%S).jpg"
 if curl -sf --max-time 10 http://127.0.0.1:8080/snapshot -o "$F" && [ -s "$F" ]; then
-  :
+  # 摄像头侧装, 无损旋转 90° 转正 (jpegtran -rotate 270 = 逆时针90°)
+  jpegtran -rotate 270 -perfect -outfile "$F" "$F" 2>/dev/null || true
 else
   rm -f "$F"
   echo "snapshot failed $(date -Is)" >&2
