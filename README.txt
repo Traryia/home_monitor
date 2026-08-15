@@ -78,6 +78,16 @@
   运行时文件: spool.jsonl (v4.0 断网缓存, 仅断网时出现)
   注: flash 已清理 (2026-08-09 删除约30个 tmp_*.py 一次性测试脚本)
 
+[D] 树莓派 (第二台, 摄像头节点, 2026-08-15 接入)
+  角色: USB 摄像头内网直播
+  OS:   Debian 13 Trixie (aarch64), labwc + lightdm
+  WiFi: 192.168.3.41, 账户 pi (已装同一把 ed25519 公钥, 免密)
+  摄像头: MagicView-UVC800 (UVC 免驱, /dev/video0)
+  直播: camera_stream.py → MJPEG http://192.168.3.41:8080 (720p)
+        systemd camera-stream.service 托管 (未 enable)
+        桌面「摄像头直播」图标双击启/停 (~/camera_toggle.sh)
+  代码: 仓库 pi_cam/ (camera_stream.py / camera_toggle.sh / .service)
+
 ----------------------------------------------------------------
   常用命令
 ----------------------------------------------------------------

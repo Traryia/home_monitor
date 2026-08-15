@@ -3,6 +3,38 @@
 ================================================================
 
 
+2026-08-15  新 Pi (192.168.3.41) + USB 摄像头内网直播
+
+  [设备] 用户的第二台树莓派 (hostname pi, aarch64, Debian 13 trixie,
+    labwc+lightdm), 接 MagicView-UVC800 USB 摄像头 (UVC 免驱,
+    /dev/video0, MJPG 最高 4656x3496)。账户 pi, 已装本机 ed25519
+    公钥 (与 Pi5 同一把), 密码未落盘
+
+  [现状] 摄像头直播脚本 camera_stream.py 是用户当天早些时候自己
+    写的 (ffmpeg -c copy → MJPEG over HTTP :8080), 手工启动,
+    无自启/无管理。本次不改动其代码, 只做工程化封装
+
+  [改动]
+    * camera-stream.service: systemd 托管 (Restart=on-failure),
+      未 enable — 按用户要求由桌面按钮控制启停
+    * ~/camera_toggle.sh: 启停开关 (sudo -n systemctl start/stop)
+    * ~/Desktop/摄像头直播.desktop: 桌面图标, 双击切换启/停
+    * 仓库新增 pi_cam/ 目录收编三个文件 (脚本原本只在设备上)
+    * 试用过的 ustreamer 已 purge (与现有方案重复); 8080 被
+      camera_stream.py 占用时 ustreamer 只能退到 8081 测试
+
+  [验证] PC 直连 http://192.168.3.41:8080/ → 200; /stream 拉流
+    提取 JPEG 帧确认为真实画面 (720p, 帧 ~22-26KB); 开关脚本
+    测试 active→inactive→active
+
+  [坑] pgrep/pkill -f 的模式会匹配 ssh 远端 bash -c 自身的命令行
+    (含同样字符串), 误判进程存在或把自己杀掉 (exit 255);
+    远端精确匹配用 pgrep -x
+
+  [可选] 如需开机自动直播: ssh pi@192.168.3.41
+    "sudo systemctl enable camera-stream"
+
+
 2026-08-14  离线判定阈值 120s→20s (mqtt_collector.py v4.1)
 
   [反馈] 用户拔掉 ESP32 供电后传感器状态仍显示在线, 问为什么
