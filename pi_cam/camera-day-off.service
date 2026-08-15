@@ -1,0 +1,6 @@
+[Unit]
+Description=Stop camera stream at 18:00 (night power save)
+
+[Service]
+Type=oneshot
+ExecStart=/bin/systemctl stop camera-stream.service

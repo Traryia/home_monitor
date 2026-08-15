@@ -1,0 +1,9 @@
+[Unit]
+Description=Stop camera stream at 18:00 (night power save)
+
+[Timer]
+OnCalendar=*-*-* 18:00:00
+Unit=camera-day-off.service
+
+[Install]
+WantedBy=timers.target

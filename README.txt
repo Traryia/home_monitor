@@ -88,7 +88,9 @@
   摄像头: MagicView-UVC800 (UVC 免驱, /dev/video0)
   直播: ustreamer → MJPEG http://192.168.3.41:8080 (720p, 多客户端)
         systemd camera-stream.service 托管 (已 enable 开机自启)
-        udev 规则 99-camera-stream.rules: 插入自动启动, 拔出自动停止
+        节电 (2026-08-15): 仅 04:30~18:00 运行 — camera_stream_day.sh
+        时间闸门 + camera-day-on/off.timer (04:30 开 / 18:00 关),
+        夜间服务处于停止状态; udev 插拔启动在夜间同样被闸门拦截
         桌面「摄像头」图标双击 = 本机屏幕弹窗看画面, 再击关闭
         (~/camera_toggle.sh → chromium --app 127.0.0.1:8080)
   延时摄影 (2026-08-15, 花园月季生长记录):

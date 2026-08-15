@@ -1,0 +1,9 @@
+[Unit]
+Description=Start camera stream at 04:30 (daytime only)
+
+[Timer]
+OnCalendar=*-*-* 04:30:00
+Unit=camera-stream.service
+
+[Install]
+WantedBy=timers.target
