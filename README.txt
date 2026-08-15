@@ -91,7 +91,12 @@
         udev 规则 99-camera-stream.rules: 插入自动启动, 拔出自动停止
         桌面「摄像头」图标双击 = 本机屏幕弹窗看画面, 再击关闭
         (~/camera_toggle.sh → chromium --app 127.0.0.1:8080)
-  代码: 仓库 pi_cam/ (service / toggle / udev规则 / camera_web页面;
+  延时摄影 (2026-08-15, 花园月季生长记录):
+        camera-timelapse.timer 每 10 分钟抓一帧 (ustreamer /snapshot,
+        不占摄像头), 存 ~/timelapse/YYYY-MM-DD_HHMMSS.jpg, latest.jpg
+        软链指向最新; Persistent=true 断电恢复后补拍
+  代码: 仓库 pi_cam/ (service / toggle / udev规则 / camera_web页面 /
+        timelapse_snap.sh + camera-timelapse.{service,timer};
         camera_stream.py 为 v1 单客户端版, 已被 ustreamer 取代, 留档)
 
 ----------------------------------------------------------------

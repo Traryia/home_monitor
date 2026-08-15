@@ -1,0 +1,7 @@
+[Unit]
+Description=Timelapse snapshot (rose growth record)
+
+[Service]
+Type=oneshot
+User=pi
+ExecStart=/home/pi/timelapse_snap.sh

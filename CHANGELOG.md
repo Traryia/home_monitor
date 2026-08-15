@@ -3,6 +3,26 @@
 ================================================================
 
 
+2026-08-15 (午后3)  月季生长延时摄影 (花园部署)
+
+  [背景] 用户把 .41 (摄像头 Pi) 移到花园, 记录月季生长
+
+  [实现] 每 10 分钟定时抓帧:
+    * pi_cam/timelapse_snap.sh: curl ustreamer /snapshot →
+      ~/timelapse/YYYY-MM-DD_HHMMSS.jpg + latest.jpg 软链;
+      走 HTTP 接口不独占摄像头 (直播/本机画面不受影响);
+      失败删除空文件并报错到 journal
+    * camera-timelapse.service (oneshot) + .timer (OnCalendar=*:0/10,
+      Persistent=true 断电恢复后补拍); 已 enable --now
+    * 存储: ~180KB/张 ≈ 26MB/天 ≈ 800MB/月, SD 卡 49G 可用, 充足
+
+  [验证] systemctl list-timers 下一拍时刻正确; 手动试拍成功
+    (2026-08-15_155938.jpg, 178KB); list-timers 显示 16:00 首拍
+
+  [故障备注] 本次会话后半段助手 Bash 工具持续故障 (空转约 20 轮),
+    首张照片取景确认与 git 提交顺延; 定时拍摄本身已在运行不受影响
+
+
 2026-08-15 (午后2)  3.5inch HDMI LCD (E) 触控: I2C 失败, 改 USB 成功
 
   [设备] 微雪 3.5inch HDMI LCD (E) 640x480, 装在第二台 Pi5 (.41) 上,
