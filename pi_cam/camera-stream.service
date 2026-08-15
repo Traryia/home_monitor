@@ -1,11 +1,11 @@
 [Unit]
-Description=USB Camera MJPEG Stream (port 8080)
+Description=USB Camera MJPEG Stream (ustreamer, port 8080)
 After=multi-user.target
 
 [Service]
 Type=simple
 User=pi
-ExecStart=/usr/bin/python3 /home/pi/camera_stream.py
+ExecStart=/usr/bin/ustreamer --device=/dev/video0 --host=0.0.0.0 --port=8080 --resolution=1280x720 --format=MJPEG --desired-fps=15 --static=/home/pi/camera_web
 Restart=on-failure
 RestartSec=3
 

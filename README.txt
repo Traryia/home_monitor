@@ -83,11 +83,13 @@
   OS:   Debian 13 Trixie (aarch64), labwc + lightdm
   WiFi: 192.168.3.41, 账户 pi (已装同一把 ed25519 公钥, 免密)
   摄像头: MagicView-UVC800 (UVC 免驱, /dev/video0)
-  直播: camera_stream.py → MJPEG http://192.168.3.41:8080 (720p)
+  直播: ustreamer → MJPEG http://192.168.3.41:8080 (720p, 多客户端)
         systemd camera-stream.service 托管 (已 enable 开机自启)
         udev 规则 99-camera-stream.rules: 插入自动启动, 拔出自动停止
-        桌面「摄像头直播」图标双击启/停 (~/camera_toggle.sh)
-  代码: 仓库 pi_cam/ (camera_stream.py / camera_toggle.sh / .service / udev规则)
+        桌面「摄像头」图标双击 = 本机屏幕弹窗看画面, 再击关闭
+        (~/camera_toggle.sh → chromium --app 127.0.0.1:8080)
+  代码: 仓库 pi_cam/ (service / toggle / udev规则 / camera_web页面;
+        camera_stream.py 为 v1 单客户端版, 已被 ustreamer 取代, 留档)
 
 ----------------------------------------------------------------
   常用命令

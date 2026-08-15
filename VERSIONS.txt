@@ -101,6 +101,7 @@ DB path: /home/pi/home_monitor/sensors.db (5.5MB)
 2026-08-10 | RustDesk 1.4.9      | ---- | Pi5 远控 (aarch64 deb); portal-wlr 固定 HDMI-A-1 免弹选择器; 凭证见本机记录
 2026-08-15 | pi_cam/             | v1.0 | 新Pi(192.168.3.41) USB摄像头直播: camera_stream.py(用户原作) + systemd托管 + 桌面开关
 2026-08-15 | pi_cam/udev规则     | v1.1 | 开机自启 + 插入USB自动启动/拔出自动停止 (99-camera-stream.rules)
+2026-08-15 | pi_cam/             | v2.0 | 服务改 ustreamer (多客户端); 桌面图标=本机弹窗看画面 (chromium --app)
 2026-08-02 | pi_display/DEPLOY.md| v1.1 | 部署/唤出/退出/截图/CDP诊断手册
 2026-08-02 | labwc autostart     | v1.1 | chromium kiosk 自启 (专用profile+锁定DPR+禁pinch)
 2026-08-02 | Desktop/天气显示.desktop | v1.1 | 双击唤出天气屏 (同 kiosk 参数)

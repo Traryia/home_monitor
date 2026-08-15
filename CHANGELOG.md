@@ -3,6 +3,38 @@
 ================================================================
 
 
+2026-08-15 (午后)  摄像头: 桌面图标改为本机弹窗看画面 + 换 ustreamer
+
+  [需求] 用户澄清: 点桌面图标要在 Pi 自己的屏幕窗口里看到画面
+    (此前按钮只是启停网络流服务)
+
+  [架构调整] camera_stream.py (用户原作) 每个客户端开一个 ffmpeg
+    独占 /dev/video0 —— 本机看和 PC 看会互相挤掉 (V4L2 同时只允许
+    一个采集进程)。改用 ustreamer: 单进程独占设备, 对多个 HTTP
+    客户端分发 (本机窗口 + PC 浏览器可同时看), --static 托管
+    camera_web/index.html 使 http://IP:8080/ 直接是画面页。
+    camera_stream.py 留档仓库不再使用 (设备上文件未删)
+
+  [改动] (192.168.3.41)
+    * camera-stream.service: ExecStart 改 ustreamer (720p MJPEG,
+      0.0.0.0:8080, --static=/home/pi/camera_web)
+    * camera_toggle.sh: 改为打开/关闭本机画面窗口 —
+      chromium --app=http://127.0.0.1:8080/ 独立 profile
+      (--user-data-dir=~/.config/chromium-cam, 与主浏览隔离),
+      再点一次图标关窗
+    * 桌面图标改名「摄像头」
+
+  [坑] chromium 新 profile 首启弹 gnome-keyring "Unlock Keyring"
+    对话框挡住页面 — 加 --password-store=basic 绕开
+  [坑] ssh 里 pkill -f 的模式串会匹配 ssh 自己的 bash -c 命令行
+    导致自杀 (exit 255, 一天内踩三次): 模式里用 [x] 括号破坏
+    自匹配, 如 pkill -f "gcr-prom[p]ter"
+
+  [验证] PC 拉 /stream 6MB/6s 正常; ssh 远程触发 toggle 开窗,
+    grim 截图确认窗口标题「摄像头」+ 实时画面 (Pi 屏幕为 640x480,
+    窗口自适应); keyring 弹窗已消
+
+
 2026-08-15 (午)  摄像头直播: 开机自启 + USB 插拔自动启停
 
   [需求] 用户: 摄像头只要插入 USB 就一直启动直播
