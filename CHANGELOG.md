@@ -3,6 +3,33 @@
 ================================================================
 
 
+2026-08-15 (午后2)  3.5inch HDMI LCD (E) 触控: I2C 失败, 改 USB 成功
+
+  [设备] 微雪 3.5inch HDMI LCD (E) 640x480, 装在第二台 Pi5 (.41) 上,
+    铜柱+顶针固定。触控芯片 Goodix 兼容 (GT911 地址 0x14/0x5d)
+
+  [I2C 尝试过程] (用户要求 I2C 触控)
+    * 装入官方 waveshare-35dpi-5b.dtbo (Pi5 专用) + config 启用
+    * 发现冲突: 默认开启的 w1-gpio 占用 GPIO4 = 触控中断脚
+      (probe EBUSY -16); 总线上无 1-Wire 设备, 禁用 w1-gpio
+    * 冲突解除后芯片仍全程 NAK (-121), i2cdetect 0x14/0x5d/0x38
+      全空; 用户确认开关已拨 I2C、5 根顶针接触正常、也拔过电
+    * 结论: 触控芯片始终未挂上 I2C 总线, 硬件链路问题 (顶针到
+      芯片段), 软件侧 (dtparam=i2c_arm / dtbo / GPIO 冲突) 已排除
+
+  [USB 方案] 用户改接 USB 触控 (开关拨 USB + USB-C 线): 免驱,
+    hid-multitouch 直接识别 "WaveShare WS170120" (0eef:0005),
+    libinput debug-events 实测 TOUCH_DOWN/MOTION/UP 坐标正常,
+    5 点触控, labwc 直接可用
+
+  [配置还原] config.txt 注释掉 waveshare-35dpi-5b (每次 boot 刷
+    Goodix 报错), w1-gpio 恢复默认启用; dtbo 文件留在 overlays/
+    备用。如需再战 I2C: 取消注释即可, 先决条件全在本文档
+
+  [经验] 远程重启 (sudo reboot) 不断 5V 电源轨, 外挂芯片的模式
+    选择开关要彻底拔电才生效; 但本次拔电后 I2C 仍无 ACK, 非此因
+
+
 2026-08-15 (午后)  摄像头: 桌面图标改为本机弹窗看画面 + 换 ustreamer
 
   [需求] 用户澄清: 点桌面图标要在 Pi 自己的屏幕窗口里看到画面

@@ -82,6 +82,9 @@
   角色: USB 摄像头内网直播
   OS:   Debian 13 Trixie (aarch64), labwc + lightdm
   WiFi: 192.168.3.41, 账户 pi (已装同一把 ed25519 公钥, 免密)
+  屏幕: 微雪 3.5inch HDMI LCD (E) 640x480, 触控走 USB-C 免驱
+        (0eef:0005 WaveShare WS170120, hid-multitouch);
+        I2C 触控尝试失败 (芯片不上总线), 详见 CHANGELOG 2026-08-15
   摄像头: MagicView-UVC800 (UVC 免驱, /dev/video0)
   直播: ustreamer → MJPEG http://192.168.3.41:8080 (720p, 多客户端)
         systemd camera-stream.service 托管 (已 enable 开机自启)
