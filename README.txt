@@ -92,9 +92,10 @@
         桌面「摄像头」图标双击 = 本机屏幕弹窗看画面, 再击关闭
         (~/camera_toggle.sh → chromium --app 127.0.0.1:8080)
   延时摄影 (2026-08-15, 花园月季生长记录):
-        camera-timelapse.timer 每 10 分钟抓一帧 (ustreamer /snapshot,
-        不占摄像头), 存 ~/timelapse/YYYY-MM-DD_HHMMSS.jpg;
-        jpegtran 无损旋转转正 (摄像头侧装); Persistent=true 断电补拍
+        camera-timelapse.timer 每 10 分钟触发, 脚本内闸门仅白天
+        04:30~18:00 拍摄 (摄像头无夜视); ustreamer /snapshot 不占
+        摄像头, 存 ~/timelapse/YYYY-MM-DD_HHMMSS.jpg;
+        jpegtran 无损旋转转正; Persistent=true 断电补拍
   查看页: http://192.168.3.41:8080 右下角 －/＋/⟳ 按钮
         (旋转/放大, localStorage 记忆; PC 和 Pi 弹窗通用)
   代码: 仓库 pi_cam/ (service / toggle / udev规则 / camera_web页面 /

@@ -1,6 +1,8 @@
 #!/bin/bash
-# 月季生长延时记录: 每 10 分钟抓一帧
+# 月季生长延时记录: 每 10 分钟抓一帧, 仅白天 04:30~18:00 (摄像头无夜视)
 # 走 ustreamer /snapshot 接口, 不独占摄像头 (直播/本机画面不受影响)
+HM=$(date +%H%M)
+[ "$HM" -ge 430 ] && [ "$HM" -lt 1800 ] || exit 0
 DIR=/home/pi/timelapse
 mkdir -p "$DIR"
 F="$DIR/$(date +%Y-%m-%d_%H%M%S).jpg"
