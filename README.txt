@@ -93,8 +93,10 @@
         (~/camera_toggle.sh → chromium --app 127.0.0.1:8080)
   延时摄影 (2026-08-15, 花园月季生长记录):
         camera-timelapse.timer 每 10 分钟抓一帧 (ustreamer /snapshot,
-        不占摄像头), 存 ~/timelapse/YYYY-MM-DD_HHMMSS.jpg, latest.jpg
-        软链指向最新; Persistent=true 断电恢复后补拍
+        不占摄像头), 存 ~/timelapse/YYYY-MM-DD_HHMMSS.jpg;
+        jpegtran 无损旋转转正 (摄像头侧装); Persistent=true 断电补拍
+  查看页: http://192.168.3.41:8080 右下角 －/＋/⟳ 按钮
+        (旋转/放大, localStorage 记忆; PC 和 Pi 弹窗通用)
   代码: 仓库 pi_cam/ (service / toggle / udev规则 / camera_web页面 /
         timelapse_snap.sh + camera-timelapse.{service,timer};
         camera_stream.py 为 v1 单客户端版, 已被 ustreamer 取代, 留档)
